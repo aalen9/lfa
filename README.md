@@ -1,24 +1,37 @@
-<img src="website/static/img/logo.png" alt="logo" width="15%" />
+# LFA Checker 
 
-# Infer ![build](https://github.com/facebook/infer/actions/workflows/install.yml/badge.svg) ![website](https://github.com/facebook/infer/actions/workflows/deploy.yml/badge.svg)
+__LFA checker__ is a typestate analysis tool implemented in **Infer**. 
+__LFA checker__ provides _lightweight_ typestate annotations and it is 
+based on strict sub-class of DFA, which we call _BFA_. It supports 
+Java and C++ programs analysis. 
 
-[Infer](http://fbinfer.com/) is a static analysis tool for Java,
-C++, Objective-C, and C. Infer is written in [OCaml](https://ocaml.org/).
+This repository contains __Infer__ sources with __TOPL__ and our additional 
+checkers enabled: 
+- **LFA checker** is a lightweight typestate analysis based on the strict sub-class of __DFA__, which we call __BFA__. Its sources are `LfaChecker.ml` and `LfaCheckerDomain.ml` in `/lfa-checker/infer/src/checkers/`. 
+- **DFA checker** is a basic typestate analysis based on __DFA__. Its sources are `DfaChecker.ml` and `DfaCheckerDomain.ml` in (`/infer/src/checkers/`). 
 
-## Installation
 
-Read our [Getting
-Started](http://fbinfer.com/docs/getting-started) page for
-details on how to install packaged versions of Infer. To build Infer
-from source, see [INSTALL.md](./INSTALL.md).
+## Installation 
+To compile from sources and install follow [__Infer__ instructions](https://github.com/facebook/infer/blob/main/INSTALL.md#install-infer-from-source). This will compile and setup __Infer__ with __LFA__, **DFA**, and __TOPL__ checkers enabled. 
 
-## Contributing
 
-See [CONTRIBUTING.md](./CONTRIBUTING.md).
+## Using LFA and DFA checkers 
+### LFA checker 
+- __LFA checker__ is invoked by specifying LFA contract (e.g., `lfa-cr.json`) by an option `--lfa-properties lfa-cr.json`
+- to only invoke __LFA checker__ use option `--lfachecker-only`
+- the sample command to analyze `Test.java` file with `lfa-cr.json` is as follows: 
+  
+`infer --lfachecker-only --lfa-properties lfa-contract.json -- javac capture 
+Test.java`
 
-## License
+- __LFA__ contract  (`lfa-cr.json` in the command above) should be formatted following contract's examples given in `/examples/lfa-experiments/cr/` with suffix _-lfa.json_
 
-Infer is MIT-licensed.
+### DFA checker 
+- __DFA checker__ is invoked by specifying DFA contract (e.g., `dfa-cr.json`) by an option `--dfa-properties dfa-cr.json`
+- to only invoke __DFA checker__ use option `--dfachecker-only`
+- the sample command to analyze `Test.java` file with `dfa-contract.json` is as follows: 
 
-Note: Enabling Java support may require you to download and install 
-components licensed under the GPL.
+`infer --dfachecker-only --dfa-properties dfa-cr.json -- javac capture 
+Test.java`
+
+- __DFA__ contract  (`dfa-cr.json` in the command above) should be formatted following contract's examples given in `/examples/lfa-experiments/cr/` with suffix _-dfa.json_
