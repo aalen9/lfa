@@ -1,0 +1,34 @@
+property Prop1
+    prefix "Foo"
+    start -> start: *
+    start -> q21: getFoo(RetFoo) => x := RetFoo
+    q1 -> q29: foo0(Foo, IgnoreRet) when Foo == x
+    q21 -> q29: foo0(Foo, IgnoreRet) when Foo == x
+    q21 -> q1: foo4(Foo, IgnoreRet) when Foo == x
+    q29 -> q21: foo2(Foo, IgnoreRet) when Foo == x
+    q29 -> q9: foo4(Foo, IgnoreRet) when Foo == x
+    q9 -> q29: foo0(Foo, IgnoreRet) when Foo == x
+    q1 -> error: foo0(Foo, IgnoreRet) when Foo == x
+    q1 -> error: foo1(Foo, IgnoreRet) when Foo == x
+    q1 -> error: foo2(Foo, IgnoreRet) when Foo == x
+    q1 -> error: foo3(Foo, IgnoreRet) when Foo == x
+    q1 -> error: foo4(Foo, IgnoreRet) when Foo == x
+    q1 -> error: foo5(Foo, IgnoreRet) when Foo == x
+    q21 -> error: foo0(Foo, IgnoreRet) when Foo == x
+    q21 -> error: foo1(Foo, IgnoreRet) when Foo == x
+    q21 -> error: foo2(Foo, IgnoreRet) when Foo == x
+    q21 -> error: foo3(Foo, IgnoreRet) when Foo == x
+    q21 -> error: foo4(Foo, IgnoreRet) when Foo == x
+    q21 -> error: foo5(Foo, IgnoreRet) when Foo == x
+    q29 -> error: foo0(Foo, IgnoreRet) when Foo == x
+    q29 -> error: foo1(Foo, IgnoreRet) when Foo == x
+    q29 -> error: foo2(Foo, IgnoreRet) when Foo == x
+    q29 -> error: foo3(Foo, IgnoreRet) when Foo == x
+    q29 -> error: foo4(Foo, IgnoreRet) when Foo == x
+    q29 -> error: foo5(Foo, IgnoreRet) when Foo == x
+    q9 -> error: foo0(Foo, IgnoreRet) when Foo == x
+    q9 -> error: foo1(Foo, IgnoreRet) when Foo == x
+    q9 -> error: foo2(Foo, IgnoreRet) when Foo == x
+    q9 -> error: foo3(Foo, IgnoreRet) when Foo == x
+    q9 -> error: foo4(Foo, IgnoreRet) when Foo == x
+    q9 -> error: foo5(Foo, IgnoreRet) when Foo == x

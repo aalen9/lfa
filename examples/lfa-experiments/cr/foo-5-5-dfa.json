@@ -1,0 +1,1 @@
+{"init_state":"q5","transitions":{"q5":{"void Foo.foo0()":"q2","void Foo.foo2()":"q24"},"q2":{"void Foo.foo1()":"q24"},"q24":{"void Foo.foo3()":"q31","void Foo.foo4()":"q8"},"q31":{"void Foo.foo0()":"q2","void Foo.foo1()":"q24","void Foo.foo2()":"q24","void Foo.foo3()":"q31"},"q8": {"void Foo.foo4()":"q31"}}}

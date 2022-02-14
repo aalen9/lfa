@@ -1,0 +1,516 @@
+counter is: 1
+repeats is: 1
+num of lines is: 1182
+num of basic calls is: 554
+
+counter is: 2
+repeats is: 1
+num of lines is: 1093
+num of basic calls is: 501
+
+counter is: 3
+repeats is: 1
+num of lines is: 1103
+num of basic calls is: 515
+
+counter is: 4
+repeats is: 1
+num of lines is: 1287
+num of basic calls is: 663
+
+counter is: 5
+repeats is: 1
+num of lines is: 1157
+num of basic calls is: 549
+
+counter is: 6
+repeats is: 1
+num of lines is: 1156
+num of basic calls is: 544
+
+counter is: 7
+repeats is: 1
+num of lines is: 1096
+num of basic calls is: 508
+
+counter is: 8
+repeats is: 1
+num of lines is: 1117
+num of basic calls is: 545
+
+counter is: 9
+repeats is: 1
+num of lines is: 1105
+num of basic calls is: 521
+
+counter is: 10
+repeats is: 1
+num of lines is: 1090
+num of basic calls is: 518
+
+counter is: 11
+repeats is: 1
+num of lines is: 1193
+num of basic calls is: 565
+
+counter is: 12
+repeats is: 1
+num of lines is: 1226
+num of basic calls is: 586
+
+counter is: 13
+repeats is: 1
+num of lines is: 1206
+num of basic calls is: 598
+
+counter is: 14
+repeats is: 1
+num of lines is: 1197
+num of basic calls is: 573
+
+counter is: 15
+repeats is: 1
+num of lines is: 1166
+num of basic calls is: 558
+
+counter is: 16
+repeats is: 1
+num of lines is: 1182
+num of basic calls is: 566
+
+counter is: 17
+repeats is: 1
+num of lines is: 1166
+num of basic calls is: 554
+
+counter is: 18
+repeats is: 1
+num of lines is: 1112
+num of basic calls is: 532
+
+counter is: 19
+repeats is: 1
+num of lines is: 1147
+num of basic calls is: 543
+
+counter is: 20
+repeats is: 1
+num of lines is: 1157
+num of basic calls is: 565
+
+counter is: 21
+repeats is: 1
+num of lines is: 1187
+num of basic calls is: 575
+
+counter is: 22
+repeats is: 1
+num of lines is: 1104
+num of basic calls is: 516
+
+counter is: 23
+repeats is: 1
+num of lines is: 1192
+num of basic calls is: 572
+
+counter is: 24
+repeats is: 1
+num of lines is: 1160
+num of basic calls is: 556
+
+counter is: 25
+repeats is: 1
+num of lines is: 1163
+num of basic calls is: 551
+
+counter is: 26
+repeats is: 1
+num of lines is: 1138
+num of basic calls is: 534
+
+counter is: 27
+repeats is: 1
+num of lines is: 1107
+num of basic calls is: 511
+
+counter is: 28
+repeats is: 1
+num of lines is: 1164
+num of basic calls is: 560
+
+counter is: 29
+repeats is: 1
+num of lines is: 1086
+num of basic calls is: 506
+
+counter is: 30
+repeats is: 1
+num of lines is: 1119
+num of basic calls is: 511
+
+counter is: 31
+repeats is: 1
+num of lines is: 1116
+num of basic calls is: 516
+
+counter is: 32
+repeats is: 1
+num of lines is: 1109
+num of basic calls is: 517
+
+counter is: 33
+repeats is: 1
+num of lines is: 1144
+num of basic calls is: 544
+
+counter is: 34
+repeats is: 1
+num of lines is: 1113
+num of basic calls is: 513
+
+counter is: 35
+repeats is: 1
+num of lines is: 1153
+num of basic calls is: 545
+
+counter is: 36
+repeats is: 1
+num of lines is: 1124
+num of basic calls is: 528
+
+counter is: 37
+repeats is: 1
+num of lines is: 1146
+num of basic calls is: 542
+
+counter is: 38
+repeats is: 1
+num of lines is: 1168
+num of basic calls is: 556
+
+counter is: 39
+repeats is: 1
+num of lines is: 1229
+num of basic calls is: 645
+
+counter is: 40
+repeats is: 1
+num of lines is: 1174
+num of basic calls is: 550
+
+counter is: 41
+repeats is: 1
+num of lines is: 1260
+num of basic calls is: 640
+
+counter is: 42
+repeats is: 1
+num of lines is: 1203
+num of basic calls is: 583
+
+counter is: 43
+repeats is: 1
+num of lines is: 1110
+num of basic calls is: 522
+
+counter is: 44
+repeats is: 1
+num of lines is: 1135
+num of basic calls is: 535
+
+counter is: 45
+repeats is: 1
+num of lines is: 1181
+num of basic calls is: 565
+
+counter is: 46
+repeats is: 1
+num of lines is: 1069
+num of basic calls is: 489
+
+counter is: 47
+repeats is: 1
+num of lines is: 1127
+num of basic calls is: 531
+
+counter is: 48
+repeats is: 1
+num of lines is: 1135
+num of basic calls is: 543
+
+counter is: 49
+repeats is: 1
+num of lines is: 1209
+num of basic calls is: 593
+
+counter is: 50
+repeats is: 1
+num of lines is: 1134
+num of basic calls is: 538
+
+counter is: 51
+repeats is: 1
+num of lines is: 1139
+num of basic calls is: 555
+
+counter is: 52
+repeats is: 1
+num of lines is: 1177
+num of basic calls is: 553
+
+counter is: 53
+repeats is: 1
+num of lines is: 1139
+num of basic calls is: 547
+
+counter is: 54
+repeats is: 1
+num of lines is: 1098
+num of basic calls is: 514
+
+counter is: 55
+repeats is: 1
+num of lines is: 1109
+num of basic calls is: 509
+
+counter is: 56
+repeats is: 1
+num of lines is: 1156
+num of basic calls is: 556
+
+counter is: 57
+repeats is: 1
+num of lines is: 1087
+num of basic calls is: 507
+
+counter is: 58
+repeats is: 1
+num of lines is: 1089
+num of basic calls is: 513
+
+counter is: 59
+repeats is: 1
+num of lines is: 1117
+num of basic calls is: 525
+
+counter is: 60
+repeats is: 1
+num of lines is: 1164
+num of basic calls is: 580
+
+counter is: 61
+repeats is: 1
+num of lines is: 1207
+num of basic calls is: 599
+
+counter is: 62
+repeats is: 1
+num of lines is: 1178
+num of basic calls is: 566
+
+counter is: 63
+repeats is: 1
+num of lines is: 1154
+num of basic calls is: 546
+
+counter is: 64
+repeats is: 1
+num of lines is: 1106
+num of basic calls is: 518
+
+counter is: 65
+repeats is: 1
+num of lines is: 1144
+num of basic calls is: 540
+
+counter is: 66
+repeats is: 1
+num of lines is: 1167
+num of basic calls is: 571
+
+counter is: 67
+repeats is: 1
+num of lines is: 1162
+num of basic calls is: 558
+
+counter is: 68
+repeats is: 1
+num of lines is: 1206
+num of basic calls is: 626
+
+counter is: 69
+repeats is: 1
+num of lines is: 1279
+num of basic calls is: 655
+
+counter is: 70
+repeats is: 1
+num of lines is: 1132
+num of basic calls is: 544
+
+counter is: 71
+repeats is: 1
+num of lines is: 1205
+num of basic calls is: 581
+
+counter is: 72
+repeats is: 1
+num of lines is: 1228
+num of basic calls is: 604
+
+counter is: 73
+repeats is: 1
+num of lines is: 1131
+num of basic calls is: 527
+
+counter is: 74
+repeats is: 1
+num of lines is: 1152
+num of basic calls is: 560
+
+counter is: 75
+repeats is: 1
+num of lines is: 1192
+num of basic calls is: 576
+
+counter is: 76
+repeats is: 1
+num of lines is: 1149
+num of basic calls is: 549
+
+counter is: 77
+repeats is: 1
+num of lines is: 1192
+num of basic calls is: 568
+
+counter is: 78
+repeats is: 1
+num of lines is: 1137
+num of basic calls is: 557
+
+counter is: 79
+repeats is: 1
+num of lines is: 1147
+num of basic calls is: 547
+
+counter is: 80
+repeats is: 1
+num of lines is: 1134
+num of basic calls is: 530
+
+counter is: 81
+repeats is: 1
+num of lines is: 1194
+num of basic calls is: 590
+
+counter is: 82
+repeats is: 1
+num of lines is: 1192
+num of basic calls is: 588
+
+counter is: 83
+repeats is: 1
+num of lines is: 1121
+num of basic calls is: 525
+
+counter is: 84
+repeats is: 1
+num of lines is: 1196
+num of basic calls is: 576
+
+counter is: 85
+repeats is: 1
+num of lines is: 1191
+num of basic calls is: 579
+
+counter is: 86
+repeats is: 1
+num of lines is: 1132
+num of basic calls is: 524
+
+counter is: 87
+repeats is: 1
+num of lines is: 1135
+num of basic calls is: 543
+
+counter is: 88
+repeats is: 1
+num of lines is: 1147
+num of basic calls is: 539
+
+counter is: 89
+repeats is: 1
+num of lines is: 1232
+num of basic calls is: 620
+
+counter is: 90
+repeats is: 1
+num of lines is: 1125
+num of basic calls is: 537
+
+counter is: 91
+repeats is: 1
+num of lines is: 1198
+num of basic calls is: 598
+
+counter is: 92
+repeats is: 1
+num of lines is: 1154
+num of basic calls is: 558
+
+counter is: 93
+repeats is: 1
+num of lines is: 1211
+num of basic calls is: 607
+
+counter is: 94
+repeats is: 1
+num of lines is: 1149
+num of basic calls is: 541
+
+counter is: 95
+repeats is: 1
+num of lines is: 1202
+num of basic calls is: 578
+
+counter is: 96
+repeats is: 1
+num of lines is: 1205
+num of basic calls is: 605
+
+counter is: 97
+repeats is: 1
+num of lines is: 1165
+num of basic calls is: 557
+
+counter is: 98
+repeats is: 1
+num of lines is: 1171
+num of basic calls is: 563
+
+counter is: 99
+repeats is: 1
+num of lines is: 1212
+num of basic calls is: 596
+
+counter is: 100
+repeats is: 1
+num of lines is: 1108
+num of basic calls is: 520
+
+counter is: 101
+repeats is: 1
+num of lines is: 1070
+num of basic calls is: 498
+
+counter is: 102
+repeats is: 1
+num of lines is: 1107
+num of basic calls is: 515
+
+counter is: 103
+repeats is: 2
+num of lines is: 1885
+num of basic calls is: 1096
+
+foo-10-85-lfa-foos-20-num-250-count-1000.java
