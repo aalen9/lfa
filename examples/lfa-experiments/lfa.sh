@@ -1,5 +1,9 @@
 #!/bin/bash 
 
+# UPATE THESE COMMAND ALIASES IF NEEDED 
+TIMECMD=gtime #gtime stands for gnu-time 
+INFERCMD=infer 
+
 TOPL=false  
 GEN=false 
 ANALYZE=false 
@@ -70,8 +74,8 @@ if $COUNT; then
 fi 
 
 
-TIMECMD=gtime 
-INFERCMD=infer 
+# TIMECMD=gtime 
+# INFERCMD=infer 
 
 export PATH="/lfa-checker/infer/bin/:${PATH}"
 
