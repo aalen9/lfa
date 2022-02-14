@@ -187,10 +187,17 @@ if $COMP; then
     # NUM_FOOS=5
     # FOOSSEQ=(4 6 8 10 16 20) 
 
-    NUM_FOOS=3
-    FOOSSEQ=(8 10 16 20)
-   NUM_FOOS=2 
-	FOOSSEQ=(8 16 20)     
+    # NUM_FOOS=3
+    # FOOSSEQ=(8 10 16 20)
+ #   NUM_FOOS=2 
+	# FOOSSEQ=(8 16 20)     
+
+    NUM_FOOS=1
+    FOOSSEQ=(8 20)  
+    # NUM_FOOS=3
+    # FOOSSEQ=(8 10 16 20)
+    # NUM_FOOS=1 
+    # FOOSSEQ=(8 20)
 #FOOSSEQ=(8 12 16 20) 
 else 
     NUM_FOOS=0  

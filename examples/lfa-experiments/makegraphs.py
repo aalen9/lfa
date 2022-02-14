@@ -109,7 +109,9 @@ def resaverage(fps):
 
 locs=[16500]
 basics=[14000]
-foos=[8,20]
+# foos=[8,20]
+# foos=[8,12,16,20]
+foos=[8, 20] 
 
 # locs=[3500]
 # basics=[3000]
