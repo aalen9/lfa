@@ -1,14 +1,14 @@
 # LFA Checker 
 
-__LFA checker__ is a typestate analysis tool implemented in **Infer**. 
+__LFA checker__ is a typestate analysis tool implemented in [**Infer**](https://fbinfer.com). 
 __LFA checker__ provides _lightweight_ typestate annotations and it is 
 based on strict sub-class of DFA, which we call _BFA_. It supports 
 Java and C++ programs analysis. 
 
 This repository contains __Infer__ sources with __TOPL__ and our additional 
 checkers enabled: 
-- **LFA checker** is a lightweight typestate analysis based on the strict sub-class of __DFA__, which we call __BFA__. Its sources are `LfaChecker.ml` and `LfaCheckerDomain.ml` in `/lfa-checker/infer/src/checkers/`. 
-- **DFA checker** is a basic typestate analysis based on __DFA__. Its sources are `DfaChecker.ml` and `DfaCheckerDomain.ml` in (`/infer/src/checkers/`). 
+- **LFA checker** is a lightweight typestate analysis based on the strict sub-class of __DFA__, which we call __BFA__. The sources are in in `/lfa-checker/infer/src/checkers/`: `LfaChecker.ml` and `LfaCheckerDomain.ml` . 
+- **DFA checker** is a basic typestate analysis based on __DFA__. The sources are in `/infer/src/checkers/`:`DfaChecker.ml` and `DfaCheckerDomain.ml` . 
 
 
 ## Installation 
