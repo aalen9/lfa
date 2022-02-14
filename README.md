@@ -36,3 +36,12 @@ Test.java`
 Test.java`
 
 - __DFA__ contract  (`dfa-cr.json` in the command above) should be formatted following contract's examples given in `/examples/lfa-experiments/cr/` with suffix _-dfa.json_
+
+## Running Experiments
+- **Prerequisites**: [gnu-time](https://www.gnu.org/software/time/) and [bc](https://www.gnu.org/software/bc/manual/html_mono/bc.html) 
+- __Note__: Update `TIMECMD` to point to `gnu-time` in `lfa.sh` 
+  
+
+- __LFA__ vs __DFA__: Run `./lfa.sh -a` in `/examples/lfa-experiments` . This command performs experiments on Java test programs in the folder and produces execution time and memory comparison graphs (`comp-time-dfa.png` and `comp-mem-dfa.png`) in `/graphs`.
+
+- __LFA__ vs __TOPL__: Similar as above with the following command: `./lfa.sh -t`. 
