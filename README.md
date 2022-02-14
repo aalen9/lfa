@@ -38,7 +38,7 @@ Test.java`
 - __DFA__ contract  (`dfa-cr.json` in the command above) should be formatted following contract's examples given in `/examples/lfa-experiments/cr/` with suffix _-dfa.json_
 
 ## Running Experiments
-- **Prerequisites**: [gnu-time](https://www.gnu.org/software/time/) and [bc](https://www.gnu.org/software/bc/manual/html_mono/bc.html) 
+- **Prerequisites**: python 3, matplotlib, [gnu-time](https://www.gnu.org/software/time/), and [bc](https://www.gnu.org/software/bc/manual/html_mono/bc.html) 
 - __Note__: Update `TIMECMD` to point to `gnu-time` in `lfa.sh` 
   
 
