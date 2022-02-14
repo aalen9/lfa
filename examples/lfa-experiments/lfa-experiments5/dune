@@ -1,7 +1,0 @@
-(executable 
-    (name lfa)
-    (libraries lib)
-    ) 
-(env 
- (dev 
-  (flags (:standard -w -26 -w -27))))

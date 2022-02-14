@@ -1,6 +1,0 @@
-(** @canonical Lib.Gencomp *)
-module Gencomp = Lib__Gencomp
-
-
-(** @canonical Lib.LfaSpecs *)
-module LfaSpecs = Lib__LfaSpecs
