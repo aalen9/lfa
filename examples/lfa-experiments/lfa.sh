@@ -70,13 +70,13 @@ if $COUNT; then
 fi 
 
 
-# TIMECMD=gtime 
-# INFERCMD=infer 
+TIMECMD=gtime 
+INFERCMD=infer 
 
 export PATH="/lfa-checker/infer/bin/:${PATH}"
 
-TIMECMD=/usr/bin/time 
-INFERCMD=/lfa-checker/infer/bin/infer 
+# TIMECMD=/usr/bin/time 
+# INFERCMD=/lfa-checker/infer/bin/infer 
 
 
 NUM_BASIC_METHODS=4
@@ -152,7 +152,7 @@ NUMBASICFUN=(110)
 
 NUM_LOC=0
 # LOCSEQ=(1200) 
-# LOCSEQ=(400) #1200/8 that is number of foos 
+# LOCSEQ=(400) 
 LOCSEQ=(4500)
 BASICSEQ=(4000)
 
@@ -176,28 +176,9 @@ NUMBASICFUN=(300)
 # NUMBASICFUN=(280)
 
 LOCSEQ=(16500)
-# # BASICSEQ=(5000)
 BASICSEQ=(14000)
-# # NUMBASICFUN=(100)
 NUMBASICFUN=(600)
-# # NUMBASICFUN=(280)
 
-#LOCSEQ=(33000)
-## BASICSEQ=(5000)
-#BASICSEQ=(28000)
-## NUMBASICFUN=(100)
-#NUMBASICFUN=(1200)
-#:w# NUMBASICFUN=(280)
-
-# NUM_LOC=0
-# LOCSEQ=(1500) 
-# # LOCSEQ=(250) #1200/8 that is number of foos 
-# BASICSEQ=(1000)
-
-# NUMBASICFUN=(80)
-
-
-# NUMBASICFUN=(80 120)
 
 if $COMP; then 
     # NUM_FOOS=3 
@@ -300,7 +281,7 @@ do
 	    if $TOPL; then 
 		  REPEATS=1
 	    else
-		  REPEATS=5
+		  REPEATS=3
 	    fi   
             #REPEATS=2
             TIME_LFA=0 
