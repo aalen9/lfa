@@ -12,7 +12,8 @@ checkers enabled:
 
 
 ## Installation 
-To compile from sources and install follow [__Infer__ instructions](https://github.com/facebook/infer/blob/main/INSTALL.md#install-infer-from-source). This will compile and setup __Infer__ with __LFA__, **DFA**, and __TOPL__ checkers enabled. 
+To install follow [__Infer__ instructions](https://github.com/facebook/infer/blob/main/INSTALL.md#install-infer-from-source) using sources from this 
+repository. This will compile and setup __Infer__ with __LFA__, **DFA**, and __TOPL__ checkers enabled. 
 
 
 ## Using LFA and DFA checkers 
