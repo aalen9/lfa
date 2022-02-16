@@ -41,7 +41,7 @@ type t =
   | Starvation
   | Topl
   | Uninit
-  | Ltachecker
+  | Lfachecker
   | Dfachecker
 [@@deriving equal, enumerate]
 
@@ -466,9 +466,9 @@ let config_unsafe checker =
       ; cli_flags= Some {deprecated= []; show_in_help= true}
       ; enabled_by_default= false
       ; activates= [] }
-    | Ltachecker -> 
-        { id= "ltachecker"
-        ; kind= UserFacing {title= "lta checker"; markdown_body= ""}
+    | Lfachecker -> 
+        { id= "lfachecker"
+        ; kind= UserFacing {title= "lfa checker"; markdown_body= ""}
         ; support= supports_clang
         ; short_documentation= "Lightweight typestate analysis."
         ; cli_flags= Some {deprecated= []; show_in_help= true}

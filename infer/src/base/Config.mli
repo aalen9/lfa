@@ -143,7 +143,7 @@ val biabduction_monitor_prop_size : bool
 
 val biabduction_nelseg : bool
 
-val lta_continue : bool 
+val lfa_continue : bool 
 
 val biabduction_only_footprint : bool
 
@@ -696,7 +696,7 @@ val topl_max_conjuncts : int
 
 val topl_max_disjuncts : int
 
-val lta_properties : string list  
+val lfa_properties : string list  
 
 val dfa_properties : string list
 

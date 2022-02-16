@@ -398,6 +398,6 @@ val is_autoreleasepool_size_issue : t -> bool
 
 module Map : PrettyPrintable.PPMap with type key = t
 
-val ltachecker_error : t
+val lfachecker_error : t
 
 val dfachecker_error : t

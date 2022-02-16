@@ -15,26 +15,17 @@ module type DfaSetS = sig
     include AbstractDomain.FiniteSetS 
 end 
 
-(* module DfaSet (Element : PrettyPrintable.PrintableOrderedType) : sig 
-    include AbstractDomain.FiniteSetS with type elt = Element.t
-end  *)
 
 module DfaSet (Element : PrettyPrintable.PrintableOrderedType) : 
  DfaSetS with type t = AbstractDomain.FiniteSet(Element).t 
         and type elt = Element.t
 
-(* naming a domain *)
 module type DomainS = sig 
-    (* domain should be just a set *)
     include AbstractDomain.FiniteSetS
-
 end 
 
 
-
 module Domain (State : PrettyPrintable.PrintableOrderedType) : DomainS 
-
-
 
 (* map domain  *)
 module DfaMap (Key : PrettyPrintable.PrintableOrderedType) 
@@ -49,24 +40,10 @@ module DfaMap (Key : PrettyPrintable.PrintableOrderedType)
 module type S = sig 
     include AbstractDomain.S 
 
-
-    (* type state 
-    type key 
-
-    module StateSet : DfaSetS with type elt := state 
-
-    module Summary : AbstractDomain.MapS with type key := key 
-                        and type value := StateSet.t  *)
-    
-
-    
     type dom
     type sum 
     type state 
 
-    
-
-    (* val error_state : state  *)
     val empty : t 
     
     val get_dom : t -> dom 
@@ -75,7 +52,6 @@ module type S = sig
     val get_sum : t -> sum 
     val update_sum : sum -> t -> t 
 
-    (* val is_state_error : state -> bool  *)
     val reset2 : state -> state -> t -> t 
     val has_issue : is_state_error:(state -> bool) -> pre:t -> post:t -> bool 
     val report_issue2 : is_state_error:(state -> bool) -> pre:t -> post:t -> string 

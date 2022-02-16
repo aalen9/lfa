@@ -32,7 +32,7 @@
      ; starvation: StarvationDomain.summary option
      ; nullsafe: NullsafeSummary.t option
      ; uninit: UninitDomain.Summary.t option  
-     ; lta: LtaCheckerDomain.DomainSummary.t option 
+     ; lfa: LfaCheckerDomain.DomainSummary.t option 
      ; dfa: DfaCheckerDomain.DomainSummary.t option}
    [@@deriving fields, yojson_of]
  end

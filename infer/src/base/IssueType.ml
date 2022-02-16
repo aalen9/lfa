@@ -1149,8 +1149,8 @@ module Map = PrettyPrintable.MakePPMap (struct
 end)
 
 
-let ltachecker_error = register ~id:"LTACHECKER_ERROR" Error Ltachecker 
-    ~user_documentation:"lta checker error."
+let lfachecker_error = register ~id:"LFACHECKER_ERROR" Error Lfachecker 
+    ~user_documentation:"lfa checker error."
 
 let dfachecker_error = register ~id:"DFACHECKER_ERROR" Error Dfachecker 
     ~user_documentation:"dfa checker error."

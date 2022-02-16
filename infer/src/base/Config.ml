@@ -700,8 +700,8 @@ and biabduction_monitor_prop_size =
 and biabduction_nelseg =
   CLOpt.mk_bool ~deprecated:["-nelseg"] ~long:"biabduction-nelseg" "Use only nonempty lsegs"
 
-and lta_continue =
-  CLOpt.mk_bool ~long:"lta-continue" "Continue checkng after an error"
+and lfa_continue =
+  CLOpt.mk_bool ~long:"lfa-continue" "Continue checkng after an error"
 
 and biabduction_only_footprint =
   CLOpt.mk_bool ~deprecated:["-only-footprint"] ~long:"biabduction-only-footprint"
@@ -2644,13 +2644,13 @@ and topl_properties =
     "[EXPERIMENTAL] Specify a file containing a temporal property definition (e.g., jdk.topl)."
 
 
-and lta_properties = 
-CLOpt.mk_path_list ~long:"lta-properties" ~default:[]
-  "Lta properties"
+and lfa_properties = 
+CLOpt.mk_path_list ~long:"lfa-properties" ~default:[]
+  "Lfa properties"
 
 and dfa_properties = 
 CLOpt.mk_path_list ~long:"dfa-properties" ~default:[]
-  "Lta properties"
+  "Dfa properties"
 
 and profiler_samples =
   CLOpt.mk_path_opt ~long:"profiler-samples"
@@ -3000,7 +3000,7 @@ and biabduction_monitor_prop_size = !biabduction_monitor_prop_size
 
 and biabduction_nelseg = !biabduction_nelseg
 
-and lta_continue = !lta_continue 
+and lfa_continue = !lfa_continue 
 
 and biabduction_only_footprint = !biabduction_only_footprint
 
@@ -3675,7 +3675,7 @@ and topl_max_conjuncts = !topl_max_conjuncts
 
 and topl_max_disjuncts = !topl_max_disjuncts
 
-and lta_properties = RevList.to_list !lta_properties 
+and lfa_properties = RevList.to_list !lfa_properties 
 
 and dfa_properties = RevList.to_list !dfa_properties 
 

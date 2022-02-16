@@ -40,7 +40,7 @@ type t =
   | Starvation
   | Topl
   | Uninit
-  | Ltachecker
+  | Lfachecker
   | Dfachecker
 [@@deriving equal, enumerate]
 

@@ -67,9 +67,9 @@ type checker = {checker: Checker.t; callbacks: (callback_fun * Language.t) list}
 let all_checkers =
   (* The order of the list is important for those checkers that depend on other checkers having run
      before them. *)
-     [ {checker= Ltachecker; 
-     callbacks= [(interprocedural Payloads.Fields.lta LtaChecker.checker, Clang); 
-     (interprocedural Payloads.Fields.lta LtaChecker.checker, Java)]} ;
+     [ {checker= Lfachecker; 
+     callbacks= [(interprocedural Payloads.Fields.lfa LfaChecker.checker, Clang); 
+     (interprocedural Payloads.Fields.lfa LfaChecker.checker, Java)]} ;
    {checker = Dfachecker; 
    callbacks=[(interprocedural Payloads.Fields.dfa DfaChecker.checker, Clang); 
    (interprocedural Payloads.Fields.dfa DfaChecker.checker, Java)]}

@@ -18,15 +18,12 @@ struct
     let pp fmt = function Caml.Option.None -> F.pp_print_string fmt "None" |
                             Caml.Option.Some dom1 -> Domain.pp fmt dom1   
 
-    (* leq *)
     let leq ~lhs ~rhs = 
         match (lhs, rhs) with 
         | Caml.Option.Some dom1, Caml.Option.Some dom2 -> (Domain.leq ~lhs:dom1 ~rhs:dom2) 
         | Caml.Option.None, _ -> false 
         | _, Caml.Option.None -> true 
-     (* CHECK THIS, None should be greater than any other *)
 
-    (* join *)
     let join dom1 dom2 = 
         match (dom1, dom2) with 
         | Caml.Option.Some dom1', Some dom2' ->
@@ -43,7 +40,6 @@ struct
 end 
 
 module type DfaSetS = sig 
-    (* type elt  *)
     include AbstractDomain.FiniteSetS 
 end 
 
@@ -51,10 +47,8 @@ module DfaSet (Element :  PrettyPrintable.PrintableOrderedType) :
     DfaSetS with type t = AbstractDomain.FiniteSet(Element).t 
         and type elt = Element.t = 
 struct 
-    (* type elt = Element.t  *)
     include AbstractDomain.FiniteSet (Element) 
 
-    (* override join *)
     let join astate1 astate2 = 
         if (is_empty astate1 || is_empty astate2) then 
                 empty 
@@ -63,9 +57,7 @@ struct
 end 
 
 
-(* naming a domain *)
 module type DomainS = sig 
-    (* domain should be just a set *)
     include AbstractDomain.FiniteSetS
 
 end 
@@ -77,7 +69,6 @@ struct
 end 
 
 
-(* map domain *)
 module DfaMap (Key : PrettyPrintable.PrintableOrderedType) 
     (ValueDomain : AbstractDomain.S) =
 struct 
@@ -110,7 +101,6 @@ struct
                 in 
                 res
 
-    (* let join astate1 astate2 = join1  *)
     let join astate1 astate2  =  
         join1 ~f:ValueDomain.join astate1 astate2 
 
@@ -128,7 +118,6 @@ module type S = sig
     type sum 
     type state 
 
-    (* val error_state : state  *)
     val empty : t 
     
     val get_dom : t -> dom 
@@ -137,19 +126,10 @@ module type S = sig
     val get_sum : t -> sum 
     val update_sum : sum -> t -> t 
 
-    (* val is_state_error : state -> bool  *)
     val reset2 : state -> state -> t -> t 
     val has_issue : is_state_error:(state -> bool) -> pre:t -> post:t -> bool 
     val report_issue2 : is_state_error:(state -> bool) -> pre:t -> post:t -> string 
 end 
-
-
-
-(* module type SummaryS = 
-    AbstractDomain.MapS with type key = String.t and type value = ValueDomain.t
-
-module type SummaryS = DfaMap(AccessPath)(DfaMap(String)(DfaSet(String))).t *)
-
 
 
 module Make (Key : PrettyPrintable.PrintableOrderedType) 
@@ -157,7 +137,6 @@ module Make (Key : PrettyPrintable.PrintableOrderedType)
 struct
 
     module Domain = DfaSet (State)
-    (* module Summary = DfaMap (State) (DfaSet (State)) *)
 
     module MapDomain = DfaMap (Key) (DfaSet (State))
     module MapSummary = DfaMap (Key) (DfaMap (State) (DfaSet (State)))
@@ -183,9 +162,7 @@ struct
     let get_sum astate = snd astate
     let update_sum sum1 (dom0, _) = (dom0, sum1)
 
-    (* REVIEW: implement this *)
     let has_issue ~is_state_error:f ~pre:(_, _) ~post:(dom_map, _) =   
-        (* check if there is a member satyfing is_state_error *)
         let fmap _key dom = Domain.exists f dom in  
         MapDomain.exists fmap dom_map 
 
@@ -199,20 +176,13 @@ struct
          (dom_map', sum_map) 
              
 
-    (* REVIEW: implement this  *)
     let report_issue2 ~is_state_error:f ~pre:(_dom_map0, _) ~post:(dom_map1, _sum_map1) =
-        (* check error in sum_map as well *)
-        (* let sum_map_error  *)
-        (* let fmap_sum key  *)
         let fmap key dom s = 
             if (Domain.exists f dom) then 
                 F.asprintf "%s. Var: %a is in error state. " s Key.pp key 
             else 
                 s in
-        MapDomain.fold fmap dom_map1 "" 
-        (* F.asprintf "%s. Methods for var: %a are not allowed: %a" s Key.pp key LabelSet.pp diff  *)
-        
-
+        MapDomain.fold fmap dom_map1 ""         
 end 
 
 module DomainSummary = Make (AccessPath) (String) 

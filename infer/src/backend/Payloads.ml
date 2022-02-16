@@ -28,7 +28,7 @@
    ; starvation: StarvationDomain.summary option
    ; nullsafe: NullsafeSummary.t option
    ; uninit: UninitDomain.Summary.t option
-   ; lta: LtaCheckerDomain.DomainSummary.t option
+   ; lfa: LfaCheckerDomain.DomainSummary.t option
    ; dfa: DfaCheckerDomain.DomainSummary.t option}
  [@@deriving fields]
  
@@ -65,7 +65,7 @@
      ~starvation:(fun f -> mk f "Starvation" StarvationDomain.pp_summary)
      ~nullsafe:(fun f -> mk f "Nullsafe" NullsafeSummary.pp)
      ~uninit:(fun f -> mk f "Uninitialised" UninitDomain.Summary.pp)
-     ~lta:(fun f -> mk f "LtaChecker" LtaCheckerDomain.DomainSummary.pp)
+     ~lfa:(fun f -> mk f "LfaChecker" LfaCheckerDomain.DomainSummary.pp)
      ~dfa:(fun f -> mk f "DfaChecker" DfaCheckerDomain.DomainSummary.pp)
  
  
@@ -94,6 +94,6 @@
    ; starvation= None
    ; nullsafe= None
    ; uninit= None
-   ; lta=None 
+   ; lfa=None 
    ; dfa=None}
  
