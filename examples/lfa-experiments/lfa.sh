@@ -8,9 +8,7 @@ TOPL=false
 GEN=false 
 ANALYZE=false 
 COUNT=false 
-# COMP=false
-COMP=true
-ALLGEN=false 
+KSTATES=false 
 # CLEAN=false 
 
 while test $# -gt 0; do
@@ -22,10 +20,6 @@ while test $# -gt 0; do
     -a|--analyze) 
         ANALYZE=true 
         break;;
-    -ga) 
-        GEN=true 
-        ANALYZE=true 
-        break;;
     -t|--topl) 
         TOPL=true 
         ANALYZE=true 
@@ -33,31 +27,20 @@ while test $# -gt 0; do
     -c|--count) 
         COUNT=true 
         break;;
-    -fa|--flatanalyze) 
-        COMP=false
+    -ak|--analyzekstates) 
+        KSTATES=true
         ANALYZE=true
-        GEN=false
         break;;
-    -fg|--flatgen) 
-        COMP=false
+    -gk|--genkstates) 
+        KSTATES=true
         ANALYZE=false
         GEN=true
         break;;
-    -ft|--flattopl) 
+    -tk|--toplkstates) 
+        KSTATES=true 
         TOPL=true 
         ANALYZE=true 
-        COMP=false 
         break;;
-     -ac|--allcompgen)
-      GEN=true 
-      ANALYZE=false 
-      ALLGEN=true 
-      break;;
-      -aa|--allcompan)
-      GEN=false 
-      ANALYZE=true 
-      ALLGEN=true 
-      break;;
     # -c|--clean) 
     #     CLEAN=true 
     #     break;;
@@ -78,34 +61,34 @@ fi
 
 NUM_BASIC_METHODS=4
 
-if $COMP;then 
-    if $ALLGEN; then 
-        NUM_STATES=5
-    else 
-        NUM_STATES=4
-    fi 
-    NUM_STATES=6
-    STATESSEQ=(5 9 14 18 30 41 85)
-    METHODSSEQ=(3 5 5 7 7 7 10)      
-else 
+
+# states 
+if $KSTATES;then 
     NUM_STATES=8
     STATESSEQ=(100 522 1044 1628 2322 2644 3138 3638 4000)
     METHODSSEQ=(14 14 14 14 14 16 18 18 18)
+else 
+    NUM_STATES=6
+    STATESSEQ=(5 9 14 18 30 41 85)
+    METHODSSEQ=(3 5 5 7 7 7 10) 
 fi 
 
-NUM_LOC=0 
-LOCSEQ=(16500)
-BASICSEQ=(14000)
-NUMBASICFUN=(600)
-
-
-if $COMP; then   
+# locs 
+if $KSTATES;then 
+    NUM_LOC=2
+    LOCSEQ=(550 800 1050) 
+    BASICSEQ=(120 240 480)
+    # NUMBASICFUN=20 
+    NUM_FOOS=3 
+    FOOSSEQ=(4 6 8 10) 
+else 
+    NUM_LOC=0 
+    LOCSEQ=(16500)
+    BASICSEQ=(14000)
+    NUMBASICFUN=(600)
 
     NUM_FOOS=1
-    FOOSSEQ=(8 20)  
-else 
-    NUM_FOOS=0  
-    FOOSSEQ=(1) 
+    FOOSSEQ=(8 20) 
 fi 
 
 
@@ -309,17 +292,17 @@ done
 
 # make graphs 
 if $ANALYZE; then 
-    if $COMP; then 
+    if $KSTATES; then 
         if $TOPL; then 
-            GRAPHS="python3 makegraphs.py --topl"
+            GRAPHS="python3 makegraphs.py --kstates --topl"
         else 
-            GRAPHS="python3 makegraphs.py"
+            GRAPHS="python3 makegraphs.py -kstates"
         fi 
     else 
         if $TOPL; then 
-            GRAPHS="python3 makegraphs.py --noncomp --topl" 
+            GRAPHS="python3 makegraphs.py --topl" 
         else 
-            GRAPHS="python3 makegraphs.py --noncomp" 
+            GRAPHS="python3 makegraphs.py" 
         fi 
     fi 
     res=$(eval $GRAPHS)

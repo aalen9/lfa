@@ -1,5 +1,6 @@
 topl=False 
-comp=True 
+# comp=True 
+kstates=False 
 
 
 import getopt, sys
@@ -7,12 +8,19 @@ import getopt, sys
 argumentList = sys.argv[1:]
  
 # Options
-options = "tf:"
+options = "tk:"
  
-long_options=["topl", "noncomp"]
+long_options=["topl", "kstates"]
 
+if (kstates): 
+    locs=[550,800,1050]
+    basics=[120,240,480] 
+    foos=[4,6,8,10]
+else: 
+    locs=[16500]
+    basics=[14000]
+    foos=[8, 20] 
 
- 
 try:
     arguments, values = getopt.getopt(argumentList, options, long_options)
      
@@ -20,8 +28,8 @@ try:
  
         if currentArgument in ("-t", "--topl"): 
             topl=True 
-        elif currentArgument in ("-f", "--noncomp"): 
-            comp=False 
+        elif currentArgument in ("-k", "--kstates"): 
+            kstates=True 
              
 except getopt.error as err:
     print (str(err))
@@ -106,12 +114,14 @@ def resaverage(fps):
 # locs=[300]
 # basics=[1200]
 
-
-locs=[16500]
-basics=[14000]
-# foos=[8,20]
-# foos=[8,12,16,20]
-foos=[8, 20] 
+# if (kstates): 
+#     locs=[550,800,1050]
+#     basics=[120,240,480] 
+#     foos=[4,6,8,10]
+# else: 
+#     locs=[16500]
+#     basics=[14000]
+#     foos=[8, 20] 
 
 # locs=[3500]
 # basics=[3000]
@@ -199,12 +209,13 @@ def plot_graph_checker_flat(checker, color, prefix=""):
         plt.plot(x, y, color, fillstyle='none', marker=marker1, label=label) 
 
 
-def plot_graph(checker, comp=True): 
+def plot_graph(checker, kstates=True): 
     for checker, color in zip(["lfa", checker], ["-b", "-r"]): 
-        if (comp): 
-            plot_graph_checker(checker, color) 
-        else: 
-            plot_graph_checker_flat(checker, color) 
+        plot_graph_checker(checker, color) 
+        # if (kstates): 
+        #     plot_graph_checker(checker, color) 
+        # else: 
+        #     plot_graph_checker_flat(checker, color) 
 
     plt.axhline(y=1.0, color='r', linestyle='--')
     plt.xlabel('states')
@@ -213,31 +224,32 @@ def plot_graph(checker, comp=True):
 
     plt.legend(loc="upper left")
     filename="" 
-    if (comp): 
-        filename="comp-"+"time-"+checker+".png" 
+    if (kstates): 
+        filename="kstates-"+"time-"+checker+".png" 
     else: 
-        filename="flat-"+"time-"+checker+".png" 
+        filename="time-"+checker+".png" 
     filename="graphs/"+filename
     plt.savefig(filename, dpi=1200)
     plt.clf() 
     return filename 
 
-def plot_graph_mem(checker, comp=True): 
+def plot_graph_mem(checker, kstates=True): 
     for checker, color in zip(["lfa", checker], ["-b", "-r"]): 
-        if (comp): 
-            plot_graph_checker(checker, color, prefix="mem-") 
-        else: 
-            plot_graph_checker_flat(checker, color, prefix="mem-") 
+        plot_graph_checker(checker, color, prefix="mem-") 
+        # if (kstates): 
+        #     plot_graph_checker(checker, color, prefix="mem-") 
+        # else: 
+        #     plot_graph_checker_flat(checker, color, prefix="mem-") 
     plt.xlabel('states')
     plt.ylabel('memory [in mb]')
     plt.title("LFA vs " + checker.upper())
 
     plt.legend(loc="upper left")
     filename=""
-    if (comp): 
-        filename="comp-"+"mem-"+checker+".png" 
+    if (kstates): 
+        filename="kstates-"+"mem-"+checker+".png" 
     else: 
-        filename="flat-"+"mem-"+checker+".png" 
+        filename="mem-"+checker+".png" 
     filename="graphs/"+filename
     plt.savefig(filename, dpi=1200)
     plt.clf() 
@@ -247,13 +259,13 @@ import sys
 
 def main(): 
     if (topl): 
-        graph1=plot_graph("topl", comp)
-        graph2=plot_graph_mem("topl", comp) 
+        graph1=plot_graph("topl", kstates)
+        graph2=plot_graph_mem("topl", kstates) 
         sys.stdout.write(graph1+"\n")
         sys.stdout.write(graph2+"\n")
     else: 
-        graph1 = plot_graph("dfa", comp)
-        graph2 = plot_graph_mem("dfa", comp)
+        graph1 = plot_graph("dfa", kstates)
+        graph2 = plot_graph_mem("dfa", kstates)
         sys.stdout.write(graph1+"\n")
         sys.stdout.write(graph2+"\n")
 

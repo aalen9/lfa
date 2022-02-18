@@ -39,9 +39,13 @@ Test.java`
 
 ## Running Experiments
 - **Prerequisites**: python 3, matplotlib, [gnu-time](https://www.gnu.org/software/time/), and [bc](https://www.gnu.org/software/bc/manual/html_mono/bc.html) 
-- __Note__: Update `TIMECMD` to point to `gnu-time` in `lfa.sh` 
+- __Note__: Update `TIMECMD` to point to `gnu-time` in `/examples/lfa-experiments/lfa.sh` 
   
+- Experiments are performed by script `./lfa.sh` in `/examples/lfa-experiments` with the following flags: 
+  - `-a` - __LFA vs DFA__: analyze Java test programs using contracts with 5-85 states (LoC ~15k) by __LFA__ and __DFA__ checker and produces execution time and memory usage comparison graphs (`time-dfa.png` and `mem-dfa.png`) in `/graphs` 
+  - `-t` - __LFA vs TOPL__: same as above but makes a comparison to __TOPL__ checker
+  - `-ak` - __LFA vs DFA__: analyze Java test programs using contracts with 100-4000 states (LoC 500-1k) and produces execution time and memory usage comparison graphs (`kstates-time-dfa.png` and `kstates-mem-dfa.png`) in `/graphs`  
+  -  `-tk` - __LFA vs TOPL__: same as above but makes a comparison with __TOPL__ checker
 
-- __LFA__ vs __DFA__: Run `./lfa.sh -a` in `/examples/lfa-experiments` . This command performs experiments on Java test programs in the folder and produces execution time and memory comparison graphs (`comp-time-dfa.png` and `comp-mem-dfa.png`) in `/graphs`.
 
-- __LFA__ vs __TOPL__: Similar as above with the following command: `./lfa.sh -t`. 
+
