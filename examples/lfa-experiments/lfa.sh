@@ -288,6 +288,7 @@ do
     done 
 done 
 
+mkdir -p graphs 
 
 # make graphs 
 if $ANALYZE; then 
