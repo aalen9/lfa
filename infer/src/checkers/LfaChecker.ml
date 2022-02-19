@@ -394,7 +394,6 @@ let checker ({InterproceduralAnalysis.proc_desc; err_log} as analysis_data) =
     let astate_pre = state.AbstractInterpreter.State.pre in 
     if (Domain.has_issue ~post:(astate_set)) then 
       (* should never fail since keys in the invariant map should always be real node id's *)
-          (* let () = debug "LFA: HAS ISSUE astate_pre: %a, and astate_post: %a" Domain.pp astate_pre Domain.pp astate_set in  *)
       let node =
         List.find_exn
           ~f:(fun node -> Procdesc.Node.equal_id node_id (Procdesc.Node.get_id node))
@@ -402,18 +401,6 @@ let checker ({InterproceduralAnalysis.proc_desc; err_log} as analysis_data) =
       in
         log_report astate_pre astate_set (ProcCfg.Exceptional.Node.loc node) proc_name 
     else () 
-  (* let do_reporting node_id state = 
-    let astate_set = state.AbstractInterpreter.State.post in
-    let astate_pre = state.AbstractInterpreter.State.pre in 
-    if (Domain.has_issue ~post:(astate_set)) then 
-      (* should never fail since keys in the invariant map should always be real node id's *)
-          (* let () = debug "LFA: HAS ISSUE astate_pre: %a, and astate_post: %a" Domain.pp astate_pre Domain.pp astate_set in  *)
-      let node =
-        List.find_exn
-          ~f:(fun node -> Procdesc.Node.equal_id node_id (Procdesc.Node.get_id node))
-          nodes
-      in
-        log_report astate_pre astate_set (ProcCfg.Exceptional.Node.loc node) proc_name  *)
   in
   let inv_map = Analyzer.exec_pdesc analysis_data ~initial:Domain.empty proc_desc in
   let result = Analyzer.compute_post analysis_data ~initial:Domain.empty proc_desc in 

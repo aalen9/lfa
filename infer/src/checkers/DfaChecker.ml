@@ -607,22 +607,16 @@ let checker ({InterproceduralAnalysis.proc_desc; err_log} as analysis_data) =
   let is_all_error sum = Summary.exists (fun _key -> fun value -> is_all_error_set value) sum in 
   let log_report astate_pre astate_post loc _ = 
     let ltr = [Errlog.make_trace_element 0 loc "Write of unused value" []] in
-    (* let message = 
-      DomSum.report_issue2 ~is_state_error:is_state_error 
-      ~pre:astate_pre ~post:astate_post in  *)
       let message = 
         DomSum.report_issue2 ~is_state_error:is_state_error 
         ~is_all_error:is_all_error 
         ~pre:astate_pre ~post:astate_post in 
     Reporting.log_issue proc_desc err_log ~loc ~ltr Dfachecker IssueType.dfachecker_error message in 
-  (* let do_reporting _node_id _state = () in  *)
   let do_reporting node_id state = if (error_reporting) then 
     let astate_set = state.AbstractInterpreter.State.post in
     let astate_pre = state.AbstractInterpreter.State.pre in 
     if (DomSum.has_issue ~is_state_error:is_state_error 
       ~is_all_error ~pre:(astate_pre) ~post:(astate_set)) then 
-    (* if (DomSum.has_issue ~is_state_error:is_state_error ~pre:(astate_pre) ~post:(astate_set)) then  *)
-      (* should never fail since keys in the invariant map should always be real node id's *)
       let node =
         List.find_exn
           ~f:(fun node -> Procdesc.Node.equal_id node_id (Procdesc.Node.get_id node))
@@ -630,19 +624,6 @@ let checker ({InterproceduralAnalysis.proc_desc; err_log} as analysis_data) =
       in
         log_report astate_pre astate_set (ProcCfg.Exceptional.Node.loc node) proc_name 
     else () 
-        (* let do_reporting node_id state = 
-          let astate_set = state.AbstractInterpreter.State.post in
-          let astate_pre = state.AbstractInterpreter.State.pre in 
-          if (DomSum.has_issue ~is_state_error:is_state_error 
-            ~is_all_error ~pre:(astate_pre) ~post:(astate_set)) then 
-          (* if (DomSum.has_issue ~is_state_error:is_state_error ~pre:(astate_pre) ~post:(astate_set)) then  *)
-            (* should never fail since keys in the invariant map should always be real node id's *)
-            let node =
-              List.find_exn
-                ~f:(fun node -> Procdesc.Node.equal_id node_id (Procdesc.Node.get_id node))
-                nodes
-            in
-              log_report astate_pre astate_set (ProcCfg.Exceptional.Node.loc node) proc_name  *)
   in
   let inv_map = Analyzer.exec_pdesc analysis_data ~initial:DomSum.empty proc_desc in
   let result = Analyzer.compute_post analysis_data ~initial:DomSum.empty proc_desc in 
