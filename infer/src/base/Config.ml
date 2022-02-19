@@ -703,6 +703,12 @@ and biabduction_nelseg =
 and lfa_continue =
   CLOpt.mk_bool ~long:"lfa-continue" "Continue checkng after an error"
 
+and lfa_no_error_reporting = 
+  CLOpt.mk_bool ~long:"lfa-no-error-reporting" "Report errors"
+
+and dfa_no_error_reporting = 
+  CLOpt.mk_bool ~long:"dfa-no-error-reporting" "Report errors"
+
 and biabduction_only_footprint =
   CLOpt.mk_bool ~deprecated:["-only-footprint"] ~long:"biabduction-only-footprint"
     "Skip the re-execution phase"
@@ -3001,6 +3007,10 @@ and biabduction_monitor_prop_size = !biabduction_monitor_prop_size
 and biabduction_nelseg = !biabduction_nelseg
 
 and lfa_continue = !lfa_continue 
+
+and lfa_no_error_reporting = !lfa_no_error_reporting
+
+and dfa_no_error_reporting = !dfa_no_error_reporting
 
 and biabduction_only_footprint = !biabduction_only_footprint
 

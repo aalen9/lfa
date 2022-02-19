@@ -116,6 +116,7 @@ module type S = sig
     include AbstractDomain.S 
     type dom
     type sum 
+    type sum_elt 
     type state 
 
     val empty : t 
@@ -127,8 +128,10 @@ module type S = sig
     val update_sum : sum -> t -> t 
 
     val reset2 : state -> state -> t -> t 
-    val has_issue : is_state_error:(state -> bool) -> pre:t -> post:t -> bool 
-    val report_issue2 : is_state_error:(state -> bool) -> pre:t -> post:t -> string 
+    val has_issue : is_state_error:(state -> bool) -> is_all_error:(sum_elt -> bool) -> pre:t -> post:t -> bool 
+    val has_issue2 : is_state_error:(state -> bool) -> pre:t -> post:t -> bool 
+    val report_issue2 : is_state_error:(state -> bool) -> is_all_error:(sum_elt -> bool) -> pre:t -> post:t -> string 
+    val report_issue3 : is_state_error:(state -> bool) -> pre:t -> post:t -> string 
 end 
 
 
@@ -141,10 +144,10 @@ struct
     module MapDomain = DfaMap (Key) (DfaSet (State))
     module MapSummary = DfaMap (Key) (DfaMap (State) (DfaSet (State)))
 
-
     type dom = MapDomain.t  
     type sum = MapSummary.t 
     type state = Domain.elt 
+    type sum_elt = MapSummary.value 
 
 
     include AbstractDomain.Pair (MapDomain) (MapSummary) 
@@ -162,7 +165,17 @@ struct
     let get_sum astate = snd astate
     let update_sum sum1 (dom0, _) = (dom0, sum1)
 
-    let has_issue ~is_state_error:f ~pre:(_, _) ~post:(dom_map, _) =   
+
+    let has_issue ~is_state_error:f ~is_all_error:f2 ~pre:(_, _) ~post:(dom_map, sum_map) =   
+        let fmap _key dom = Domain.exists f dom in  
+        let fsum _key sum = f2 sum in 
+        if (MapSummary.is_empty sum_map) then 
+            MapDomain.exists fmap dom_map 
+        else 
+            MapSummary.exists fsum sum_map
+        (* MapDomain.exists fmap dom_map || MapSummary.exists fsum sum_map *)
+
+    let has_issue2 ~is_state_error:f ~pre:(_, _) ~post:(dom_map, _) =   
         let fmap _key dom = Domain.exists f dom in  
         MapDomain.exists fmap dom_map 
 
@@ -176,13 +189,29 @@ struct
          (dom_map', sum_map) 
              
 
-    let report_issue2 ~is_state_error:f ~pre:(_dom_map0, _) ~post:(dom_map1, _sum_map1) =
+    let report_issue2 ~is_state_error:f ~is_all_error:f2 ~pre:(_dom_map0, _) 
+    ~post:(dom_map1, sum_map1) =
         let fmap key dom s = 
             if (Domain.exists f dom) then 
-                F.asprintf "%s. Var: %a is in error state. " s Key.pp key 
+                F.asprintf "%s. Var: %a is in error state" s Key.pp key 
             else 
                 s in
-        MapDomain.fold fmap dom_map1 ""         
+        let fmap_sum key sum s = 
+            if (f2 sum) then 
+                F.asprintf "%s. Var: %a is in error state" s Key.pp key  
+        else 
+            s in 
+        let s' = MapDomain.fold fmap dom_map1 "" in 
+            MapSummary.fold fmap_sum sum_map1 s' 
+
+    let report_issue3 ~is_state_error:f ~pre:(_dom_map0, _) 
+    ~post:(dom_map1, _sum_map1) =
+        let fmap key dom s = 
+            if (Domain.exists f dom) then 
+                F.asprintf "%s. Var: %a is in error state" s Key.pp key 
+            else 
+                s in
+        MapDomain.fold fmap dom_map1 ""   
 end 
 
 module DomainSummary = Make (AccessPath) (String) 

@@ -163,11 +163,10 @@ do
             fi 
 
             # TEST TIME 
-            cmd_lfa="$TIMECMD --format='%U %M' -- $INFERCMD --lfachecker-only --lfa-properties cr/foo-$methods-$states-lfa.json > temp.txt"
-
-            cmd_dfa="$TIMECMD --format='%U %M' -- $INFERCMD --dfachecker-only --dfa-properties cr/foo-$methods-$states-dfa.json > temp.txt"
-
+            cmd_lfa="$TIMECMD --format='%e %M' -- $INFERCMD --lfachecker-only --lfa-no-error-reporting --lfa-properties cr/foo-$methods-$states-lfa.json > temp.txt"
+            cmd_dfa="$TIMECMD --format='%e %M' -- $INFERCMD --dfachecker-only --dfa-no-error-reporting  --dfa-properties cr/foo-$methods-$states-dfa.json > temp.txt"
             cmd_topl="$TIMECMD --format='%e %M' -- $INFERCMD --topl-only --topl-properties cr/foo-$methods-$states.topl > temp.txt"
+
 
             #  repeat n times and get average
 	    if $TOPL; then 

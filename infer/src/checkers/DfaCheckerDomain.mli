@@ -42,6 +42,7 @@ module type S = sig
 
     type dom
     type sum 
+    type sum_elt 
     type state 
 
     val empty : t 
@@ -53,8 +54,11 @@ module type S = sig
     val update_sum : sum -> t -> t 
 
     val reset2 : state -> state -> t -> t 
-    val has_issue : is_state_error:(state -> bool) -> pre:t -> post:t -> bool 
-    val report_issue2 : is_state_error:(state -> bool) -> pre:t -> post:t -> string 
+    val has_issue : is_state_error:(state -> bool) -> is_all_error:(sum_elt -> bool) -> pre:t -> post:t -> bool 
+    val has_issue2 : is_state_error:(state -> bool) -> pre:t -> post:t -> bool 
+    val report_issue2 : is_state_error:(state -> bool) -> is_all_error:(sum_elt -> bool) -> pre:t -> post:t -> string 
+    val report_issue3 : is_state_error:(state -> bool) -> pre:t -> post:t -> string 
+
 end 
 
 
@@ -73,6 +77,7 @@ module Make (Key : PrettyPrintable.PrintableOrderedType)
 module DomainSummary : S with type 
     dom = DfaMap(AccessPath)(DfaSet(String)).t and 
     type state = String.t and 
-    type sum = DfaMap(AccessPath)(DfaMap(String)(DfaSet(String))).t 
+    type sum = DfaMap(AccessPath)(DfaMap(String)(DfaSet(String))).t and 
+    type sum_elt = DfaMap(String)(DfaSet(String)).t
     (* and type label = AccessPath.t*DfaSet(String).t  *)
 

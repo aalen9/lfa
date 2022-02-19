@@ -26,6 +26,7 @@ module DfaMapSum = DfaCheckerDomain.DfaMap (Key) (DfaCheckerDomain.DfaMap (State
 
 
 
+
 module LabelStateMap = PrettyPrintable.MakePPMonoMap (String) (String) 
 module DfaDefMap = PrettyPrintable.MakePPMonoMap (String) (LabelStateMap)
 
@@ -36,6 +37,9 @@ let dfa_properties_path = Config.dfa_properties
 let is_active_c = Config.is_checker_enabled Dfachecker && not (List.is_empty dfa_properties_path)
 let is_active = ref is_active_c
 
+(* let error_reporting = Config.lfa_error_reporting  *)
+
+let error_reporting = not Config.dfa_no_error_reporting 
 
  (* read from file *)
  let dfa_json = 
@@ -83,7 +87,8 @@ module TransferFunctions = struct
   let get_error_state_dfa = "error"
 
 
-  let _is_state_error state = Int.equal (String.compare state get_error_state_dfa) 0 
+  let _is_state_error state = Int.equal (String.compare state get_error_state_dfa) 0
+
 
   let get_state_dfa state label dfa = 
     let labelStateOpt = DfaDefMap.find_opt state dfa in 
@@ -597,15 +602,26 @@ let checker ({InterproceduralAnalysis.proc_desc; err_log} as analysis_data) =
   let nodes = Procdesc.get_nodes proc_desc in
   let get_error_state_dfa = "error" in 
   let is_state_error state = Int.equal (String.compare state get_error_state_dfa) 0 in
+  let is_all_error2 state = Int.equal (String.compare state "all_error") 0 in 
+  let is_all_error_set states = StateSet.exists is_all_error2 states in 
+  let is_all_error sum = Summary.exists (fun _key -> fun value -> is_all_error_set value) sum in 
   let log_report astate_pre astate_post loc _ = 
     let ltr = [Errlog.make_trace_element 0 loc "Write of unused value" []] in
-    let message = 
-      DomSum.report_issue2 ~is_state_error:is_state_error ~pre:astate_pre ~post:astate_post in 
+    (* let message = 
+      DomSum.report_issue2 ~is_state_error:is_state_error 
+      ~pre:astate_pre ~post:astate_post in  *)
+      let message = 
+        DomSum.report_issue2 ~is_state_error:is_state_error 
+        ~is_all_error:is_all_error 
+        ~pre:astate_pre ~post:astate_post in 
     Reporting.log_issue proc_desc err_log ~loc ~ltr Dfachecker IssueType.dfachecker_error message in 
-  let do_reporting node_id state = 
+  (* let do_reporting _node_id _state = () in  *)
+  let do_reporting node_id state = if (error_reporting) then 
     let astate_set = state.AbstractInterpreter.State.post in
     let astate_pre = state.AbstractInterpreter.State.pre in 
-    if (DomSum.has_issue ~is_state_error:is_state_error ~pre:(astate_pre) ~post:(astate_set)) then 
+    if (DomSum.has_issue ~is_state_error:is_state_error 
+      ~is_all_error ~pre:(astate_pre) ~post:(astate_set)) then 
+    (* if (DomSum.has_issue ~is_state_error:is_state_error ~pre:(astate_pre) ~post:(astate_set)) then  *)
       (* should never fail since keys in the invariant map should always be real node id's *)
       let node =
         List.find_exn
@@ -613,6 +629,20 @@ let checker ({InterproceduralAnalysis.proc_desc; err_log} as analysis_data) =
           nodes
       in
         log_report astate_pre astate_set (ProcCfg.Exceptional.Node.loc node) proc_name 
+    else () 
+        (* let do_reporting node_id state = 
+          let astate_set = state.AbstractInterpreter.State.post in
+          let astate_pre = state.AbstractInterpreter.State.pre in 
+          if (DomSum.has_issue ~is_state_error:is_state_error 
+            ~is_all_error ~pre:(astate_pre) ~post:(astate_set)) then 
+          (* if (DomSum.has_issue ~is_state_error:is_state_error ~pre:(astate_pre) ~post:(astate_set)) then  *)
+            (* should never fail since keys in the invariant map should always be real node id's *)
+            let node =
+              List.find_exn
+                ~f:(fun node -> Procdesc.Node.equal_id node_id (Procdesc.Node.get_id node))
+                nodes
+            in
+              log_report astate_pre astate_set (ProcCfg.Exceptional.Node.loc node) proc_name  *)
   in
   let inv_map = Analyzer.exec_pdesc analysis_data ~initial:DomSum.empty proc_desc in
   let result = Analyzer.compute_post analysis_data ~initial:DomSum.empty proc_desc in 

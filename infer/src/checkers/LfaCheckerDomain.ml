@@ -7,7 +7,7 @@ module type DomainOptS = sig
     include AbstractDomain.S 
 end 
 
-let debug fmt = L.debug Analysis Verbose fmt
+let _debug fmt = L.debug Analysis Verbose fmt
 
 module DomainOpt (Domain : AbstractDomain.S) : 
     DomainOptS with type t = Domain.t option = 
@@ -49,7 +49,7 @@ struct
     let pp fmt = function Caml.Option.None -> F.pp_print_string fmt "None" |
                         Caml.Option.Some dom1 ->  
                             (* Domain.pp fmt dom1 *)
-                            let () = L.d_printfln "IN PP FOR DOMAINOPT2" in 
+                            (* let () = L.d_printfln "IN PP FOR DOMAINOPT2" in  *)
                             F.fprintf fmt "@Some %a" Domain.pp dom1  
 
     let leq ~lhs ~rhs = 
@@ -66,11 +66,7 @@ struct
         | None, Caml.Option.Some dom2' -> Caml.Option.Some dom2'
         | None, None -> None 
 
-    let widen ~prev ~next ~num_iters = 
-        match (prev, next) with 
-        | Caml.Option.Some dom1, Caml.Option.Some dom2 -> 
-                Caml.Option.Some (Domain.widen ~prev:dom1 ~next:dom2 ~num_iters:num_iters) 
-        | _, _ -> join prev next 
+    let widen ~prev ~next ~num_iters:_ =  join prev next 
 
 
 end 
@@ -122,6 +118,7 @@ module LfaSet (Element :  PrettyPrintable.PrintableOrderedType) =
 struct 
     include AbstractDomain.FiniteSet (Element) 
     let join astate1 astate2 = inter astate1 astate2 
+    (* let widen  *)
 end 
 
 
@@ -174,6 +171,7 @@ module Summary (Element : PrettyPrintable.PrintableOrderedType) = struct
 
     include AbstractDomain.Pair (Transf) (StatePre)
 
+
     let join ((en1, dis1), pre1) ((en2,dis2), pre2) = 
         let dis = EltSet.union dis1 dis2 in 
         let en = EltSet.diff (EltSet.inter en1 en2) dis in 
@@ -183,6 +181,10 @@ module Summary (Element : PrettyPrintable.PrintableOrderedType) = struct
                         Caml.Option.some (EltSet.union pre1' pre2') 
             | _, _ -> None) in 
         ((en, dis), pre)
+
+    let widen ~prev ~next ~num_iters:_= 
+        join prev next 
+
 
     let add_pre el ((en1,dis1), pre1) = ((en1, dis1), Caml.Option.map (EltSet.add el) pre1)
     let remove_pre el ((en1,dis1), pre1) = ((en1, dis1), Caml.Option.map (EltSet.remove el) pre1) 
@@ -258,7 +260,8 @@ end
 module Make (Key : PrettyPrintable.PrintableOrderedType) 
                 (Label : PrettyPrintable.PrintableOrderedType) =
 struct
-    module LabelSet = LfaSet (Label) 
+    (* module LabelSet = LfaSet (Label)  *)
+    module LabelSet = AbstractDomain.FiniteSet (Label) 
 
 
     module Sum = Summary (Label)
@@ -271,7 +274,15 @@ struct
     type sum = MapSummary.t 
     type label = Key.t * LabelSet.t 
 
-    include AbstractDomain.Pair (MapSummary) (ProcMap) 
+    module PairM = AbstractDomain.Pair (MapSummary) (ProcMap) 
+
+    include PairM 
+
+
+    let widen ~prev ~next ~num_iters = 
+        if (Int.equal num_iters 1) then         
+            join prev next else prev 
+        (* join prev next       *)
 
                 
     let pp fmt (summary, proc_label) = 
@@ -326,7 +337,10 @@ struct
                 let dis_set = Sum.get_dis sum_ap in 
                 let diff = LabelSet.inter dis_set label_set in 
                 if (LabelSet.is_empty diff) then 
-                    (astate, true) 
+                    let label_set_opt = ProcMap.find_opt ap label_map in 
+                    (match label_set_opt with 
+                    | None -> (astate, true)
+                    | Some _ -> (astate, false))
                 else 
                     let some_label =  Caml.Option.Some diff in 
                     let label_map' = ProcMap.add ap some_label label_map in 
@@ -335,7 +349,7 @@ struct
 
 
     let has_issue ~post:(_, label_map) = 
-        let () = debug "in has_issue\n" in 
+        (* let () = debug "in has_issue\n" in  *)
         if (ProcMap.is_empty label_map) then 
             false 
         else 
@@ -353,12 +367,15 @@ struct
      
 
     let reset2 (sum0, label_map) = 
+        (* DEBUG begin *)
+        let () = L.d_printfln "reset2 is called!!" in 
+        (* DEBUG end *)
         let f some_label = 
             (match some_label with 
             | None -> None 
             | Some _ -> Some LabelSet.empty) in 
-           let label_map1 =  ProcMap.map f label_map in 
-           (sum0, label_map1)
+        let label_map1 =  ProcMap.map f label_map in 
+            (sum0, label_map1)
 
     let report_issue2 ~post:(_, label_map) = 
         (* check the difference between label_map and dom_map *)

@@ -145,6 +145,10 @@ val biabduction_nelseg : bool
 
 val lfa_continue : bool 
 
+val lfa_no_error_reporting : bool 
+
+val dfa_no_error_reporting : bool 
+
 val biabduction_only_footprint : bool
 
 val biabduction_seconds_per_iteration : float option
@@ -699,6 +703,7 @@ val topl_max_disjuncts : int
 val lfa_properties : string list  
 
 val dfa_properties : string list
+
 
 val topl_properties : string list
 

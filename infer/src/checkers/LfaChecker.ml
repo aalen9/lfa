@@ -27,6 +27,9 @@ module LfaDefMap = Caml.Map.Make(Label)
 let continue = Config.lfa_continue 
 (* let continue = true  *)
 
+let error_reporting = not Config.lfa_no_error_reporting 
+
+
 let _debug fmt = L.debug Analysis Verbose fmt
 
 module TransferFunctions = struct
@@ -215,16 +218,22 @@ let annons2set label =
         sum_caller' 
 
   let summary_astate ap_exp astate_caller sum_callee = 
+    (* BEGIN debug *)
+    let () = L.d_printfln "summary_astate called\n" in 
+    let () = L.d_printfln "ap_exp is: %a \n" AccessPath.pp ap_exp in 
+    let () = L.d_printfln "astate_caller is: %a \n" Domain.pp astate_caller in 
+    let () = L.d_printfln "sum_calle is: %a\n" Summary.pp sum_callee in 
+    (* END debug *)
     if (Summary.is_error sum_callee) then
       let label = (ap_exp, (LfaSet.singleton "function")) in 
       let astate' = Domain.add_error_proc_names label astate_caller in 
           astate' 
       else 
     let pre = Summary.get_pre sum_callee in 
-    let (astate_caller, b) = Domain.check_state (ap_exp, LfaSet.empty) astate_caller in 
-    if (not b && not continue) then 
+    let (astate_caller, _b) = Domain.check_state (ap_exp, LfaSet.empty) astate_caller in 
+    (* if (not b && not continue) then 
       astate_caller 
-    else 
+    else  *)
     let (astate_caller, b2) = Domain.transition_check (ap_exp, pre) astate_caller in 
     if (not b2 && not continue) then 
       astate_caller else 
@@ -380,7 +389,7 @@ let checker ({InterproceduralAnalysis.proc_desc; err_log} as analysis_data) =
     let ltr = [Errlog.make_trace_element 0 loc "Write of unused value" []] in
     let message =  Domain.report_issue2 ~post:astate_post in 
     Reporting.log_issue proc_desc err_log ~loc ~ltr Lfachecker IssueType.lfachecker_error message in 
-  let do_reporting node_id state = 
+  let do_reporting node_id state = if (error_reporting) then 
     let astate_set = state.AbstractInterpreter.State.post in
     let astate_pre = state.AbstractInterpreter.State.pre in 
     if (Domain.has_issue ~post:(astate_set)) then 
@@ -392,6 +401,19 @@ let checker ({InterproceduralAnalysis.proc_desc; err_log} as analysis_data) =
           nodes
       in
         log_report astate_pre astate_set (ProcCfg.Exceptional.Node.loc node) proc_name 
+    else () 
+  (* let do_reporting node_id state = 
+    let astate_set = state.AbstractInterpreter.State.post in
+    let astate_pre = state.AbstractInterpreter.State.pre in 
+    if (Domain.has_issue ~post:(astate_set)) then 
+      (* should never fail since keys in the invariant map should always be real node id's *)
+          (* let () = debug "LFA: HAS ISSUE astate_pre: %a, and astate_post: %a" Domain.pp astate_pre Domain.pp astate_set in  *)
+      let node =
+        List.find_exn
+          ~f:(fun node -> Procdesc.Node.equal_id node_id (Procdesc.Node.get_id node))
+          nodes
+      in
+        log_report astate_pre astate_set (ProcCfg.Exceptional.Node.loc node) proc_name  *)
   in
   let inv_map = Analyzer.exec_pdesc analysis_data ~initial:Domain.empty proc_desc in
   let result = Analyzer.compute_post analysis_data ~initial:Domain.empty proc_desc in 
