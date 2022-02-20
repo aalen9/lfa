@@ -232,7 +232,6 @@ let read_and_count_dfa file_path =
   let count = count_dfa_loc dfa in 
   count 
 
-  (* TODO: continue here *)
 
   let read_file_lines filename = 
     let lines = ref [] in
@@ -330,7 +329,7 @@ let read_and_count_lta_filter file_path =
     let file_name = 
       "foo-"^(string_of_int num_methods)^"-"^(string_of_int num_states) in 
     let file_name = folder^file_name in 
-    let lta_file_name = file_name^"-lta.json" in 
+    let lta_file_name = file_name^"-lfa.json" in 
     let dfa_file_name = file_name^"-dfa.json" in 
     let topl_file_name = file_name^".topl" in 
     let (count_lta, reachable) = read_and_count_lta_filter lta_file_name in 
