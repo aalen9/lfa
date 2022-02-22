@@ -14,11 +14,20 @@ installation. See the instructions for
 [Linux](http://docs.docker.com/linux/step_one/) or
 [MacOS](http://docs.docker.com/mac/step_one/) as appropriate.
 
-## Installation 
-To pull __Docker__ repo use the following command: 
+The computing environment should support x86_64 docker. 
+
+## Getting Started 
+- Pull __Docker__ repo use the following command: 
 ```sh 
 docker pull aalen9/lfa-checker:latest
 ```
+
+- Run container with root permisions: 
+```sh
+docker run -u root -it aalen9/lfa-checker:latest
+```
+
+
 
 ## Overview 
 The `lfa-checker:latest` image contains (in root directory `/`): 
