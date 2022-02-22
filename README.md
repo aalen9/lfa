@@ -12,10 +12,26 @@ checkers enabled:
 
 
 ## Installation 
+
 To install follow [__Infer__ instructions](https://github.com/facebook/infer/blob/main/INSTALL.md#install-infer-from-source) using sources from this 
 repository. This will compile and setup __Infer__ with __LFA__, **DFA**, and __TOPL__ checkers enabled. 
 
+### Docker image
+We also provide __Docker__ image with _compiled_ __Infer__  with 
+__LFA__, **DFA**, and __TOPL__ checkers. See README in `/docker` for 
+ installation and usage instructions. 
 
+
+## Running Experiments
+- **Prerequisites**: python 3, matplotlib, [gnu-time](https://www.gnu.org/software/time/), and [bc](https://www.gnu.org/software/bc/manual/html_mono/bc.html) 
+- __Note__: Update `TIMECMD` to point to `gnu-time` in `/examples/lfa-experiments/lfa.sh` 
+  
+- Experiments are performed by script `./lfa.sh` in `/examples/lfa-experiments` with the following flags: 
+  - `-a` - __LFA vs DFA__: analyze Java test programs using contracts with 5-85 states (LoC ~15k) by __LFA__ and __DFA__ checker and produces execution time and memory usage comparison graphs (`time-dfa.png` and `mem-dfa.png`) in `/graphs` 
+  - `-t` - __LFA vs TOPL__: same as above but makes a comparison to __TOPL__ checker
+  - `-ak` - __LFA vs DFA__: analyze Java test programs using contracts with 100-4000 states (LoC 500-1k) and produces execution time and memory usage comparison graphs (`kstates-time-dfa.png` and `kstates-mem-dfa.png`) in `/graphs`  
+  -  `-tk` - __LFA vs TOPL__: same as above but makes a comparison with __TOPL__ checker
+  
 ## Using LFA and DFA checkers 
 ### LFA checker 
 - __LFA checker__ is invoked by specifying LFA contract (e.g., `lfa-cr.json`) by an option `--lfa-properties lfa-cr.json`
@@ -37,15 +53,6 @@ Test.java`
 
 - __DFA__ contract  (`dfa-cr.json` in the command above) should be formatted following contract's examples given in `/examples/lfa-experiments/cr/` with suffix _-dfa.json_
 
-## Running Experiments
-- **Prerequisites**: python 3, matplotlib, [gnu-time](https://www.gnu.org/software/time/), and [bc](https://www.gnu.org/software/bc/manual/html_mono/bc.html) 
-- __Note__: Update `TIMECMD` to point to `gnu-time` in `/examples/lfa-experiments/lfa.sh` 
-  
-- Experiments are performed by script `./lfa.sh` in `/examples/lfa-experiments` with the following flags: 
-  - `-a` - __LFA vs DFA__: analyze Java test programs using contracts with 5-85 states (LoC ~15k) by __LFA__ and __DFA__ checker and produces execution time and memory usage comparison graphs (`time-dfa.png` and `mem-dfa.png`) in `/graphs` 
-  - `-t` - __LFA vs TOPL__: same as above but makes a comparison to __TOPL__ checker
-  - `-ak` - __LFA vs DFA__: analyze Java test programs using contracts with 100-4000 states (LoC 500-1k) and produces execution time and memory usage comparison graphs (`kstates-time-dfa.png` and `kstates-mem-dfa.png`) in `/graphs`  
-  -  `-tk` - __LFA vs TOPL__: same as above but makes a comparison with __TOPL__ checker
 
 
 
