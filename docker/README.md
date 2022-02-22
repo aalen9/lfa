@@ -17,7 +17,7 @@ installation. See the instructions for
 The computing environment should support x86_64 docker. 
 
 ## Getting Started 
-- Pull __Docker__ repo use the following command: 
+- Pull __Docker__ container: 
 ```sh 
 docker pull aalen9/lfa-checker:latest
 ```
