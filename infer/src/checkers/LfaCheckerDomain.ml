@@ -142,9 +142,16 @@ sig
     val add_en_set : eltSet -> t -> t 
     val add_dis_set : eltSet -> t -> t
 
+    (* new must *)
+    val add_must_set : eltSet -> t -> t 
+    val add_called_set : eltSet -> t -> t
+    (* new must *)
+
     val get_en : t -> eltSet
     val get_dis : t -> eltSet
     val get_pre : t -> eltSet 
+    val get_must : t -> eltSet 
+    val get_called : t -> eltSet 
 
     val remove_en_set : eltSet -> t -> t 
     val remove_en : elt list -> t -> t 
@@ -155,6 +162,14 @@ sig
     val empty : t
     val is_error : t -> bool 
     val error : t -> t 
+
+     (* MUST *)
+     val add_must : elt list -> t -> t 
+     val rem_must : elt list -> t -> t 
+     val add_called : elt list -> t -> t 
+     val rem_called : elt list -> t -> t 
+ 
+     val is_must_empty : t -> bool 
 end 
 
 
@@ -169,10 +184,16 @@ module Summary (Element : PrettyPrintable.PrintableOrderedType) = struct
 
     module Transf = AbstractDomain.Pair (EltSet) (EltSet) 
 
-    include AbstractDomain.Pair (Transf) (StatePre)
+    module MustPair = AbstractDomain.Pair (EltSet) (EltSet) 
 
+    module MayTriplet = AbstractDomain.Pair (Transf) (StatePre)
 
-    let join ((en1, dis1), pre1) ((en2,dis2), pre2) = 
+    (* include AbstractDomain.Pair (Transf) (StatePre) *)
+
+    include AbstractDomain.Pair (MayTriplet) (MustPair) 
+
+   
+    let join_may ((en1, dis1), pre1) ((en2,dis2), pre2) = 
         let dis = EltSet.union dis1 dis2 in 
         let en = EltSet.diff (EltSet.inter en1 en2) dis in 
         let pre = 
@@ -180,54 +201,108 @@ module Summary (Element : PrettyPrintable.PrintableOrderedType) = struct
             | Caml.Option.Some pre1', Caml.Option.Some pre2' ->  
                         Caml.Option.some (EltSet.union pre1' pre2') 
             | _, _ -> None) in 
-        ((en, dis), pre)
+        ((en, dis), pre) 
+
+    let join_must (m1, c1) (m2, c2) = 
+        (EltSet.union m1 m2, EltSet.inter c1 c2) 
+    
+
+
+    let join (may_triplet1, must_pair1) (may_triplet2, must_pair2) =
+        (join_may may_triplet1 may_triplet2, join_must must_pair1 must_pair2)  
+
 
     let widen ~prev ~next ~num_iters:_= 
         join prev next 
 
 
-    let add_pre el ((en1,dis1), pre1) = ((en1, dis1), Caml.Option.map (EltSet.add el) pre1)
-    let remove_pre el ((en1,dis1), pre1) = ((en1, dis1), Caml.Option.map (EltSet.remove el) pre1) 
-    let mem_pre_en el ((en1, _), _) = EltSet.mem el en1 
-    let mem_pre_dis el ((_, dis1), _) = EltSet.mem el dis1 
+    let add_pre el (((en1, dis1), pre1), (m1, c1)) = 
+        (((en1, dis1), Caml.Option.map (EltSet.add el) pre1), (m1, c1))
+    let remove_pre el (((en1,dis1), pre1), (m1, c1)) = 
+        (((en1, dis1), Caml.Option.map (EltSet.remove el) pre1), (m1 ,c1)) 
+    let mem_pre_en el (((en1, _), _),_) = EltSet.mem el en1 
+    let mem_pre_dis el (((_, dis1), _),_) = EltSet.mem el dis1 
 
-    let add_en labels ((en1,dis1), pre1) = 
-        ((EltSet.union (EltSet.of_list labels) en1, dis1), pre1) 
+    let add_en labels (((en1,dis1), pre1), m) = 
+        (((EltSet.union (EltSet.of_list labels) en1, dis1), pre1), m)
 
-    let add_dis labels ((en1,dis1), pre1) = 
-        ((en1, EltSet.union (EltSet.of_list labels) dis1), pre1) 
+    let add_dis labels (((en1,dis1), pre1), m) = 
+        (((en1, EltSet.union (EltSet.of_list labels) dis1), pre1), m)
 
-    let add_pre_set pre_set ((en1,dis1), pre1) = 
+    let add_pre_set pre_set (((en1,dis1), pre1), m) = 
         match pre1 with 
-        | Some pre1' -> ((en1,dis1), Caml.Option.some (EltSet.union pre_set pre1'))
-        | None -> ((en1,dis1), Caml.Option.some pre_set)
+        | Some pre1' -> 
+            (((en1,dis1), Caml.Option.some (EltSet.union pre_set pre1')), m)
+        | None -> 
+            (((en1,dis1), Caml.Option.some pre_set), m) 
 
-    let add_en_set en_set ((en1,dis1), pre1) = ((EltSet.union en1 en_set,dis1), pre1)
-    let add_dis_set dis_set ((en1,dis1), pre1) = ((en1,EltSet.union dis_set dis1), pre1)
+    let add_en_set en_set (((en1,dis1), pre1), m) = 
+        (((EltSet.union en1 en_set,dis1), pre1), m) 
+    let add_dis_set dis_set (((en1,dis1), pre1), m) = 
+        (((en1,EltSet.union dis_set dis1), pre1), m) 
+
+    (* new MUST begin *)
+    let add_must_set must_set (((en1,dis1), pre1), (must, called)) = 
+        (((en1,dis1), pre1), (EltSet.union must_set must, called)) 
+    let add_called_set called_set (((en1,dis1), pre1), (must, called)) = 
+        (((en1,dis1), pre1), (must, EltSet.union called called_set)) 
+    (* new MUST end *)
 
 
-    let get_en ((en1, _dis1), _pre1) = en1 
-    let get_dis ((_en1, dis1), _pre1) = dis1
-    let get_pre ((_,_), pre1) = 
+    let get_en (((en1, _dis1), _pre1), _m) = en1 
+    let get_dis (((_en1, dis1), _pre1), _m) = dis1
+    let get_pre ((_, pre1), _m) = 
         match pre1 with 
         | Some pre -> pre 
         | None -> EltSet.empty 
 
+    let get_must (((_en1, _dis1), _pre1), (m,_c)) = m 
+    let get_called (((_en1, _dis1), _pre1), (_m,c)) = c 
 
-    let remove_en labels ((en1, dis1), pre1) = 
-        ((EltSet.diff en1 (EltSet.of_list labels), dis1), pre1) 
-    let remove_dis labels ((en1, dis1), pre1) = 
-        ((en1, EltSet.diff dis1 (EltSet.of_list labels)), pre1) 
 
-    let remove_en_set set_labels ((en1, dis1), pre1) = 
-        ((EltSet.diff en1 set_labels, dis1), pre1) 
-    let remove_dis_set set_labels ((en1, dis1), pre1) = 
-        ((en1, EltSet.diff dis1 set_labels), pre1) 
+    let remove_en labels (((en1, dis1), pre1), m) = 
+        (((EltSet.diff en1 (EltSet.of_list labels), dis1), pre1), m)  
+    let remove_dis labels (((en1, dis1), pre1), m) = 
+        (((en1, EltSet.diff dis1 (EltSet.of_list labels)), pre1), m)
 
-    let empty = ((EltSet.empty, EltSet.empty), Caml.Option.some EltSet.empty)
+    let remove_en_set set_labels (((en1, dis1), pre1), m) = 
+        (((EltSet.diff en1 set_labels, dis1), pre1), m) 
+    let remove_dis_set set_labels (((en1, dis1), pre1), m) = 
+        (((en1, EltSet.diff dis1 set_labels), pre1), m)  
 
-    let is_error ((_en1,_dis1), pre1) = Caml.Option.is_none pre1 
-    let error ((en1, dis1), _) = ((en1,dis1), Caml.Option.None)
+    let empty = 
+        (((EltSet.empty, EltSet.empty), Caml.Option.some EltSet.empty), 
+        (EltSet.empty, EltSet.empty))
+
+    let is_error (((_en1, _dis1), pre1), _m) = Caml.Option.is_none pre1 
+    let error (((en1, dis1), _), m) = (((en1,dis1), Caml.Option.None), m) 
+
+    (* MUST functions *)
+    let must_map f (((en1, dis1), pre1), (m1, c1)) = 
+        (((en1, dis1), pre1), (f m1, c1))
+
+    let called_map f (((en1, dis1), pre1), (m1, c1)) = 
+        (((en1, dis1), pre1), (m1, f c1))
+
+    let must_get_f f (_, (m1, _)) = f m1 
+    let _called_get_f f (_,(_, c1)) = f c1 
+
+    
+    let add_elts labels set = EltSet.union (EltSet.of_list labels) set 
+    let rem_elts labels set = EltSet.diff set (EltSet.of_list labels)
+
+    (* public *)
+    let add_must labels sum = must_map (add_elts labels) sum 
+    
+    let rem_must labels sum = must_map (rem_elts labels) sum 
+
+    let add_called labels sum = called_map (add_elts labels) sum 
+    let rem_called labels sum = called_map (rem_elts labels) sum 
+
+    let is_must_empty sum = must_get_f EltSet.is_empty sum 
+
+    
+
 
 end 
 
@@ -242,13 +317,18 @@ module type S = sig
     val get_sum : t -> sum 
     val update_sum : sum -> t -> t 
 
-    val add_error_proc_names: label -> t -> t 
+    val add_error_proc_names: label -> t -> t         
+    val add_error_must: label -> t -> t 
+
+    val check_and_error_must: label -> t -> t*bool  
+
 
     val check_state: label -> t -> t*bool 
 
     val check_state2: label -> t -> bool
 
     val transition_check: label -> t -> t*bool 
+    (* val transition_check_desctr: label -> t -> t*bool  *)
 
 
     val has_issue :  post:t -> bool 
@@ -271,10 +351,14 @@ struct
     module SomeLabelSet = DomainOpt2 (LabelSet)
     module ProcMap = LfaMap (Key) (SomeLabelSet)
 
+    module ProcMapPair = AbstractDomain.Pair (ProcMap) (ProcMap) 
+
     type sum = MapSummary.t 
     type label = Key.t * LabelSet.t 
 
-    module PairM = AbstractDomain.Pair (MapSummary) (ProcMap) 
+    (* must: proc map for may and for must *)
+
+    module PairM = AbstractDomain.Pair (MapSummary) (ProcMapPair) 
 
     include PairM 
 
@@ -285,24 +369,48 @@ struct
         (* join prev next       *)
 
                 
-    let pp fmt (summary, proc_label) = 
-        F.fprintf fmt "@\nSummary: %a @\nProcLabel: %a @\n" 
-                   MapSummary.pp summary ProcMap.pp proc_label 
+    let pp fmt (summary, (proc_label, proc_label_map)) = 
+        F.fprintf fmt "@\nSummary: %a @\nProcLabel: %a @\n ProcLabel: %a @\n" 
+            MapSummary.pp summary ProcMap.pp proc_label ProcMap.pp proc_label_map
 
-    let empty = (MapSummary.empty, ProcMap.empty)
+    let empty = (MapSummary.empty, (ProcMap.empty, ProcMap.empty))
 
     let get_sum astate = (fst astate) 
     let update_sum sum1 (_, proc_label0) = (sum1, proc_label0)
 
 
-    let add_error_proc_names (ap, label_set) (sum0, proc_label0) = 
+    let add_error_proc_names (ap, label_set) (sum0, (proc_label0, proc_label_must)) = 
        let proc_label1 = ProcMap.add ap (Caml.Option.Some label_set) proc_label0 in 
-        (sum0, proc_label1)
+        (sum0, (proc_label1, proc_label_must))
+
+    let add_error_must (ap, label_set) (sum0, (proc_label0, proc_label_must)) = 
+        let proc_label_must1 = 
+            ProcMap.add ap (Caml.Option.Some label_set) proc_label_must in 
+        (sum0, (proc_label0, proc_label_must1))
+
+
+    let check_and_error_must (ap, _label_set) astate =
+        let (sum0, (_proc_label0, _proc_label_must)) = astate in  
+        let ap_sum_opt = MapSummary.find_opt ap sum0 in 
+        match ap_sum_opt with 
+            | Some ap_sum -> 
+                (* let must_set = Sum.get_must ap_sum in  *)
+                (* let b = LabelSet.is_empty must_set in  *)
+                let b = Sum.is_must_empty ap_sum in 
+                let astate' = 
+                    if (b) then 
+                    astate 
+                else 
+                    let must_set = Sum.get_must ap_sum in 
+                    add_error_must (ap, must_set) astate in 
+                (astate',b) 
+            | None -> (astate, true)
 
 
     let check_state2 label astate = 
         let (ap, _label_set) = label in 
-        let (_, label_map) = astate in
+        (* TODO: check must *)
+        let (_, (label_map, _label_map_must)) = astate in
         let proc_ap_opt = ProcMap.find_opt ap label_map in 
         (match proc_ap_opt with 
         | None -> 
@@ -312,9 +420,10 @@ struct
                             | None -> true))
 
 
+
     let check_state label astate = 
         let (ap, _label_set) = label in 
-        let (sum0, label_map) = astate in
+        let (sum0, (label_map, label_map_must)) = astate in
         let proc_ap_opt = ProcMap.find_opt ap label_map in 
         let some_label = Caml.Option.Some LabelSet.empty in 
         (match proc_ap_opt with 
@@ -322,14 +431,14 @@ struct
         | Some proc_ap -> (match proc_ap with 
                             | Some _ ->  
                                 let label_map' = ProcMap.add ap some_label label_map in 
-                                let astate' = (sum0, label_map') in  
+                                let astate' = (sum0, (label_map', label_map_must)) in  
                                 (astate', false)
                             | None ->  (astate, true))) 
 
 
     let transition_check label astate = 
         let (ap, label_set) = label in 
-        let (sum0, label_map) = astate in
+        let (sum0, (label_map, label_map_must)) = astate in
         let sum_ap_opt = MapSummary.find_opt ap sum0 in 
         (match sum_ap_opt with 
             | None -> (astate, true) 
@@ -344,15 +453,15 @@ struct
                 else 
                     let some_label =  Caml.Option.Some diff in 
                     let label_map' = ProcMap.add ap some_label label_map in 
-                    ((sum0, label_map'), false))
+                    ((sum0, (label_map', label_map_must)), false))
+
+   
 
 
-
-    let has_issue ~post:(_, label_map) = 
-        (* let () = debug "in has_issue\n" in  *)
-        if (ProcMap.is_empty label_map) then 
+    let has_issue ~post:(_, (label_map, label_map_must)) = 
+        if (ProcMap.is_empty label_map && ProcMap.is_empty label_map_must) then 
             false 
-        else 
+        else                 
             let f _key some_labelset b = 
                 (match some_labelset with 
                 | Some labelset -> 
@@ -362,11 +471,13 @@ struct
                         true 
                 | None -> b
                 ) in 
-            ProcMap.fold f label_map false 
+            let b1 = ProcMap.fold f label_map false in 
+            let b2 = ProcMap.fold f label_map_must false in 
+            b1 || b2 
 
      
 
-    let reset2 (sum0, label_map) = 
+    let reset2 (sum0, (label_map, label_map_must)) = 
         (* DEBUG begin *)
         let () = L.d_printfln "reset2 is called!!" in 
         (* DEBUG end *)
@@ -375,9 +486,9 @@ struct
             | None -> None 
             | Some _ -> Some LabelSet.empty) in 
         let label_map1 =  ProcMap.map f label_map in 
-            (sum0, label_map1)
+            (sum0, (label_map1, label_map_must))
 
-    let report_issue2 ~post:(_, label_map) = 
+    let report_issue2 ~post:(_, (label_map, label_map_must)) = 
         (* check the difference between label_map and dom_map *)
         let f key some_labelset s = 
            (match some_labelset with 
@@ -385,7 +496,13 @@ struct
             | Some labelset -> 
                 F.asprintf "%s. Methods are not allowed: %a (for var: %a)" s LabelSet.pp labelset 
                 Key.pp key) in 
-        ProcMap.fold f label_map ""
+        let must_map key some_labelset s = 
+            (match some_labelset with 
+            | None -> s 
+            | Some labelset ->  F.asprintf "%s. Methods must be called: %a (for var: %a)" s LabelSet.pp labelset 
+            Key.pp key) in 
+        let s = ProcMap.fold f label_map "" in 
+        let s' = ProcMap.fold must_map label_map_must s in s' 
     
 
 

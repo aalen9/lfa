@@ -1,0 +1,6 @@
+(** @canonical Dune__exe.Lfa *)
+module Lfa = Dune__exe__Lfa
+
+
+(** @canonical Dune__exe.LfaSpecs *)
+module LfaSpecs = Dune__exe__LfaSpecs

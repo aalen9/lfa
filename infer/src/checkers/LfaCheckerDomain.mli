@@ -40,9 +40,17 @@ sig
     val add_en_set : eltSet -> t -> t 
     val add_dis_set : eltSet -> t -> t
 
+    (* new must *)
+    val add_must_set : eltSet -> t -> t 
+    val add_called_set : eltSet -> t -> t
+    (* new must *)
+
     val get_en : t -> eltSet
     val get_dis : t -> eltSet
     val get_pre : t -> eltSet 
+
+    val get_must : t -> eltSet 
+    val get_called : t -> eltSet 
 
     val remove_en_set : eltSet -> t -> t 
     val remove_en : elt list -> t -> t 
@@ -53,6 +61,15 @@ sig
     val empty : t
     val is_error : t -> bool 
     val error : t -> t 
+
+    (* MUST *)
+    val add_must : elt list -> t -> t 
+    val rem_must : elt list -> t -> t 
+    val add_called : elt list -> t -> t 
+    val rem_called : elt list -> t -> t 
+
+    val is_must_empty : t -> bool 
+
 end 
 
 module Summary (Element : PrettyPrintable.PrintableOrderedType) : 
@@ -66,20 +83,31 @@ module Summary (Element : PrettyPrintable.PrintableOrderedType) :
     
         val empty : t 
     
+    
         val get_sum : t -> sum 
         val update_sum : sum -> t -> t 
     
         val add_error_proc_names: label -> t -> t 
+        val add_error_must: label -> t -> t 
+
+
+        val check_and_error_must: label -> t -> t*bool  
+
     
         val check_state: label -> t -> t*bool 
+        
         val check_state2: label -> t -> bool
         val transition_check: label -> t -> t*bool 
-    
+        (* val transition_check_desctr: label -> t -> t*bool  *)
+
     
         val has_issue :  post:t -> bool 
+        (* val has_issue *)
     
         val reset2 : t -> t 
         val report_issue2 :  post:t -> string 
+
+        (* val get_ap_sum :  *)
     end 
 
 

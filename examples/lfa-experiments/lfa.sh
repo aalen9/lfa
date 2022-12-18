@@ -64,9 +64,20 @@ NUM_BASIC_METHODS=4
 
 # states 
 if $KSTATES;then 
-    NUM_STATES=8
-    STATESSEQ=(100 522 1044 1628 2322 2644 3138 3638 4000)
-    METHODSSEQ=(14 14 14 14 14 16 18 18 18)
+    NUM_STATES=13
+    # MUST CRS (998 1358 1442 2104 3568 4166 4510)
+    # ADDED (998 1358 2104 4510)
+    STATESSEQ_CR=(100 522 998 1044 1358 1628 2104 2322 2644 3138 3638 4000 4166 4510)
+    STATESSEQ_FILE=(100 522 522 1044 522 1628 522 2322 2644 3138 3638 4000 522 522)
+
+    METHODSSEQ=(14 14 14 14 14 14 14 14 16 18 18 18 14 14)
+
+    # # only MUST 
+    # NUM_STATES=3
+    # STATESSEQ_CR=(998 1358 2104 4510)
+    # STATESSEQ_FILE=(522 522 522 522) 
+    # METHODSSEQ=(14 14 14 14) 
+
 else 
     NUM_STATES=6
     STATESSEQ=(5 9 14 18 30 41 85)
@@ -78,9 +89,11 @@ if $KSTATES;then
     NUM_LOC=2
     LOCSEQ=(550 800 1050) 
     BASICSEQ=(120 240 480)
-    # NUMBASICFUN=20 
+    
     NUM_FOOS=3 
     FOOSSEQ=(4 6 8 10) 
+
+    NUMBASICFUN=(18 30 40) 
 else 
     NUM_LOC=0 
     LOCSEQ=(16500)
@@ -101,7 +114,8 @@ fi
 
 for i in $(seq 0 $NUM_STATES)
 do 
-    states=${STATESSEQ[i]}
+    states=${STATESSEQ_FILE[i]}
+    states_cr=${STATESSEQ_CR[i]}
     methods=${METHODSSEQ[i]} 
 
     for j in $(seq 0 $NUM_LOC)
@@ -116,7 +130,7 @@ do
         do 
         foos=${FOOSSEQ[k]}    
         if $COMP; then 
-            cmd_client="dune exec -- ./lfa.exe  -comp -rangebasic $basic -numcomp $foos -rangenum  $loc -methods  $methods  -states $states -numbasicfun $NUM_BASIC_METHODS >> temp.txt"
+            cmd_client="dune exec -- ./lfa.exe  -comp -rangebasic $basic -numcomp $foos -rangenum  $loc -methods  $methods  -states $states -numbasicfun $NUM_BASIC_METHODS"
         else 
             cmd_client="dune exec -- ./lfa.exe  -rangenum  $loc -methods  $methods  -states $states"
         fi 
@@ -163,16 +177,16 @@ do
             fi 
 
             # TEST TIME 
-            cmd_lfa="$TIMECMD --format='%e %M' -- $INFERCMD --lfachecker-only --lfa-no-error-reporting --lfa-properties cr/foo-$methods-$states-lfa.json > temp.txt"
-            cmd_dfa="$TIMECMD --format='%e %M' -- $INFERCMD --dfachecker-only --dfa-no-error-reporting  --dfa-properties cr/foo-$methods-$states-dfa.json > temp.txt"
-            cmd_topl="$TIMECMD --format='%e %M' -- $INFERCMD --topl-only --topl-properties cr/foo-$methods-$states.topl > temp.txt"
+            cmd_lfa="$TIMECMD --format='%e %M' -- $INFERCMD --lfachecker-only --lfa-no-error-reporting --lfa-properties cr/foo-$methods-$states_cr-lfa.json > temp.txt"
+            cmd_dfa="$TIMECMD --format='%e %M' -- $INFERCMD --dfachecker-only --dfa-no-error-reporting  --dfa-properties cr/foo-$methods-$states_cr-dfa.json > temp.txt"
+            cmd_topl="$TIMECMD --format='%e %M' -- $INFERCMD --topl-only --topl-properties cr/foo-$methods-$states_cr.topl > temp.txt"
 
 
             #  repeat n times and get average
 	    if $TOPL; then 
 		  REPEATS=1
 	    else
-		  REPEATS=3
+		  REPEATS=2
 	    fi   
             #REPEATS=2
             TIME_LFA=0 
@@ -268,17 +282,17 @@ do
             echo -e "\n"
 
             # APPEND TO FILE 
-            echo "($states, $MEAN_TIME_LFA)" >> ${LFA_PATH}
+            echo "($states_cr, $MEAN_TIME_LFA)" >> ${LFA_PATH}
             # echo "($states, $MEAN_TIME_DFA)" >> ${DFA_PATH}
-            echo "($states, $MEAN_MEMORY_LFA)" >> ${MEM_LFA_PATH}
+            echo "($states_cr, $MEAN_MEMORY_LFA)" >> ${MEM_LFA_PATH}
             # echo "($states, $MEAN_MEMORY_DFA)" >> ${MEM_DFA_PATH}
 
             if $TOPL; then 
-                echo "($states, $MEAN_TIME_TOPL)" >> ${TOPL_PATH}
-                echo "($states, $MEAN_MEMORY_TOPL)" >> ${MEM_TOPL_PATH}
+                echo "($states_cr, $MEAN_TIME_TOPL)" >> ${TOPL_PATH}
+                echo "($states_cr, $MEAN_MEMORY_TOPL)" >> ${MEM_TOPL_PATH}
             else 
-                echo "($states, $MEAN_TIME_DFA)" >> ${DFA_PATH}
-                echo "($states, $MEAN_MEMORY_DFA)" >> ${MEM_DFA_PATH}
+                echo "($states_cr, $MEAN_TIME_DFA)" >> ${DFA_PATH}
+                echo "($states_cr, $MEAN_MEMORY_DFA)" >> ${MEM_DFA_PATH}
             fi 
 
         fi 
